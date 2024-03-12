@@ -1,0 +1,29 @@
+.sidebar {
+  width: 200px;
+  padding: 50px 20px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  z-index: 1;
+  background-color: #fff;
+}
+
+.logo-sidebar {
+  height: 50px;
+  width: 50px;
+}
+
+.simulation-settings {
+  margin: 50px 0;
+}
+
+.simulation-settings-item {
+  margin-bottom: 50px;
+}
+
+.content {
+  margin-left: 250px;
+  min-height: 95vh;
+  border: 1px solid #000;
+}

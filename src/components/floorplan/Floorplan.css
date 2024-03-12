@@ -1,0 +1,162 @@
+/* START OF UNIVERSAL ELEMENT STYLING */
+p {
+  font-size: 0.8em;
+}
+
+.floorplan-element {
+  background-color: rgb(199, 199, 199);
+  height: 60px;
+  width: 60px;
+  border: 1px solid #000;
+}
+
+.section-outside {
+  margin-top: -100px;
+}
+
+@keyframes moveUpToQueue {
+  from {
+    transform: translateY(100vh);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.customer {
+  animation: moveUpToQueue 3s ease-out forwards;
+  z-index: 2;
+}
+/* END OF UNIVERSAL ELEMENT STYLING */
+
+/* START OF COUNTERS STYLING */
+.counters-batch01 {
+  margin-left: 10px;
+}
+
+.counter-batch01-item {
+  margin-top: 5px;
+}
+
+.counters-batch02 {
+  margin-top: -195px;
+  margin-left: -500px;
+}
+
+.counter-batch02-item {
+  margin-right: 5px;
+  display: inline-block;
+}
+
+.counters-batch03 {
+  margin-left: 450px;
+  margin-top: -65px;
+}
+
+.counter-batch03-item {
+  margin-top: 5px;
+}
+
+.waiting-area {
+  width: 320px;
+  height: 180px;
+  border: 1px solid #000;
+  background-color: rgb(158, 158, 158);
+  margin-left: 100px;
+  margin-top: -180px;
+}
+/* END OF COUNTERS STYLING */
+
+/* START OF DIVIDERS STYLING */
+.divider-branch-inside-and-out {
+  margin-left: 520px;
+  border: 1px solid #000;
+  width: 0;
+  height: 400px;
+  margin-top: -270px;
+}
+
+.divider-branch-inside {
+  border: 1px solid #000;
+  width: 200px;
+  margin-top: -100px;
+}
+
+.divider-branch-outside {
+  margin-top: 200px;
+  float: right;
+  border: 1px solid #000;
+  width: 330px;
+  margin-right: -70px;
+}
+/* END OF DIVIDERS STYLING */
+
+/* START OF APP BOOTHS STYLING */
+.app-booths {
+  margin-left: 140px;
+}
+
+.app-booth-item {
+  background-color: rgb(199, 199, 199);
+  height: 70px;
+  width: 60px;
+  border: 1px solid #000;
+  margin-top: 5px;
+}
+/* END OF APP BOOTHS STYLING */
+
+/* START OF ATM COINS STYLING */
+.atm-coin-machines {
+  margin-left: 530px;
+  margin-top: -455px;
+}
+/* END OF ATM COINS STYLING */
+
+/* START OF ATM MACHINES STYLING */
+.atm-machines-batch02 {
+  margin-left: 500px;
+  margin-top: -62px;
+}
+
+.atm-machines-batch02-item {
+  display: inline-block;
+  margin-left: 5px;
+}
+
+.atm-machines-batch01 {
+  float: right;
+  margin-top: 210px;
+  margin-right: -260px;
+}
+
+.atm-machines-batch01-item {
+  display: inline-block;
+  margin-right: 10px;
+}
+/* END OF ATM MACHINES STYLING */
+
+/* START OF VTM MACHINES STYLING */
+.vtm-machines {
+  float: right;
+  margin-top: -70px;
+  margin-right: 10px;
+}
+
+.vtm-machine-item {
+  margin-top: 5px;
+  height: 80px;
+}
+/* END OF VTM MACHINES STYLING */
+
+/* START OF MAIN QUEUE STYLING */
+.main-queue {
+  width: 60px;
+  height: 300px;
+  border: 1px solid #000;
+  background-color: rgb(255, 255, 255);
+  margin-left: 410px;
+  margin-top: 400px;
+}
+/* END OF MAIN QUEUE STYLING */
