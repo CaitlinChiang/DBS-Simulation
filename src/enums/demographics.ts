@@ -11,7 +11,7 @@ export enum DemographicAdditionalServiceTime {
 }
 
 export enum DemographicArrivalProb {
-  LOCAL_ELDERLY = 0.50,
-  LOCAL_ADULT = 0.45,
-  FOREIGNER = 0.05
+  LOCAL_ELDERLY = 0.500,
+  LOCAL_ADULT = 0.450,
+  FOREIGNER = 0.050
 }
