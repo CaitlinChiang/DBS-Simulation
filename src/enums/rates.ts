@@ -1,0 +1,2 @@
+export const ARRIVAL_RATE = 0.012
+export const RETURN_LATER_QUEUE_AGAIN_RATE = 0.016
