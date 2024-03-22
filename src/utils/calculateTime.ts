@@ -3,7 +3,6 @@ import { DemographicAdditionalServiceTime } from '../enums/demographic'
 
 export const calculateTotalStationTime = (stationTime: number, customer: Customer | undefined): number => {
   if (!customer) return stationTime
-
   return stationTime + DemographicAdditionalServiceTime[customer.demographic]
 }
 
@@ -14,6 +13,5 @@ export const calculateTotalDwellTime = (customer: Customer): number => {
   const startDate: any = new Date(startTime)
   const endDate: any = new Date(endTime)
 
-  // Return time in seconds
-  return (endDate - startDate) / 1000
+  return (endDate - startDate) / 1000 // seconds
 }
