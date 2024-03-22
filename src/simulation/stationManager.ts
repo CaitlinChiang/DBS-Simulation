@@ -72,7 +72,7 @@ class StationManager {
     equipment.customer = null
   }
 
-  updateStationEquipments() {
+  updateStationEquipment() {
     Object.entries(this.equipment).forEach(([station, equipments]) => {
       equipments.forEach(equipment => {
         if (equipment.status === StationEquipmentStatus.OCCUPIED && equipment.countdown > 0) {
