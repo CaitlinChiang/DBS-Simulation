@@ -18,7 +18,10 @@ TODO:
 - When timer runs to 0, customer has his dwell time calculated, and is marked with a state EXIT
 - Then the equipment is marked as vacant
 - Dwell time is included in the constant averaging of dwell times per demographic
-*** NOTE: This should happen simultaneously, so if there are 2 equipments vacant, then 2 customers can use both simultaneously.
+
+TODO:
+- Shifting of customers from station queue to vacant equipment should happen simultaneously, so if there are 2 equipments vacant, then 2 customers can use both simultaneously.
+- The functions of update station equipment and shifting of customers should be running repeatedly (always running) 
 
 4. [Arrival Route 02] Customer in ATMs Queue -> Same Logic as Route 01
 
