@@ -1,10 +1,10 @@
 import { Customer } from '../types/customer'
-import { DemographicAdditionalServiceTime } from '../enums/demographics'
+import { DemographicAdditionalServiceTime } from '../enums/demographic'
 
-export const calculateTotalStationTime = (baseTime: number, customer: Customer | undefined): number => {
-  if (!customer) return baseTime
+export const calculateTotalStationTime = (stationTime: number, customer: Customer | undefined): number => {
+  if (!customer) return stationTime
 
-  return baseTime + DemographicAdditionalServiceTime[customer.demographic]
+  return stationTime + DemographicAdditionalServiceTime[customer.demographic]
 }
 
 export const calculateTotalDwellTime = (customer: Customer): number => {

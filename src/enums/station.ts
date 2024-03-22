@@ -14,7 +14,7 @@ export enum StationEquipmentCount {
   VTMS = 3
 }
 
-export enum StationStatus {
+export enum StationEquipmentStatus {
   OCCUPIED = 'OCCUPIED',
   VACANT = 'VACANT'
 }

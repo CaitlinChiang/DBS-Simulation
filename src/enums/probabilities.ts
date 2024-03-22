@@ -3,10 +3,10 @@ export enum StateFromArrivalProb {
   ATMS = 0.308,
   ATM_COINS = 0.039,
   VTMS = 0.067,
-  RETURNING_LATER_QN = 0.107
+  RETURN_LATER_QN = 0.107
 }
 
-export enum StateFromQueueProb {
+export enum StateFromQueueManagerDirectProb {
   APP_BOOTHS = 0.257,
   COUNTERS = 0.510,
   ATMS = 0.140,

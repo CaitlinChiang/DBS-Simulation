@@ -1,4 +1,4 @@
-export const decideNextActionBasedOnProb = <T>(enumObj: { [s: string]: T }): any => {
+export const returnResultBasedOnProb = <T>(enumObj: { [s: string]: T }): any => {
   // Convert the enum to an array of [key, probability] pairs
   const entries = Object.entries(enumObj).filter(([key]) => isNaN(Number(key))) as [string, T][];
   

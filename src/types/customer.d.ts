@@ -1,10 +1,10 @@
-import { Demographic } from '../enums/demographics'
-import { State } from '../enums/states'
+import { Demographic } from '../enums/demographic'
+import { State, StateFromArrival } from '../enums/states'
 import { Station } from '../enums/station'
 
 export type Customer = {
   id: string
   demographic: Demographic
-  state: State | Station
+  state: StateFromArrival | State | Station
   dwellTime: number
 }
