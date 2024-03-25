@@ -1,10 +1,9 @@
 import { Customer } from '../types/customer'
 import { Equipment } from '../types/equipment'
-import { State } from '../enums/states'
 import { Station, StationEquipmentCount, StationEquipmentStatus } from '../enums/station'
 import { StateTimings } from '../enums/timings'
-import { calculateTotalStationTime, calculateTotalDwellTime } from '../utils/calculateTime'
-import { averageDemographicDwellTimeManager } from '../utils/averageDemographicDwellTimeManager'
+import { calculateTotalStationTime } from '../utils/calculateTime'
+import { updateCustomerDwellTimeAndExitSimulation } from '../utils/updateCustomerDwellTimeAndExitSimulation'
 
 class StationManager {
   private queues: Record<Station, Customer[]>
@@ -32,11 +31,14 @@ class StationManager {
     this.queues[station].push(customer)
   }
 
-  getStationVacantEquipmentInfo(station: Station): { isEquipmentVacant: boolean, vacantEquipmentIndex: number } {
-    const vacantEquipmentIndex = this.equipment[station].findIndex(equipment => equipment.status === StationEquipmentStatus.VACANT)
-    const isEquipmentVacant = vacantEquipmentIndex !== -1
+  getStationVacantEquipmentInfo(station: Station): { isEquipmentVacant: boolean, vacantEquipmentIndices: number[] } {
+    const vacantEquipmentIndices = this.equipment[station].reduce((indices: number[], equipment: Equipment, index: number) => {
+      if (equipment.status === StationEquipmentStatus.VACANT) indices.push(index)
+      return indices
+    }, [])
+    const isEquipmentVacant = vacantEquipmentIndices.length > 0
     
-    return { isEquipmentVacant, vacantEquipmentIndex }
+    return { isEquipmentVacant, vacantEquipmentIndices }
   }
 
   assignCustomerToVacantEquipment(station: Station, vacantEquipmentIndex: number, customer: Customer) {
@@ -48,22 +50,15 @@ class StationManager {
   }
 
   shiftCustomerFromStationQueueToVacantEquipment(station: Station) {
-    const { isEquipmentVacant, vacantEquipmentIndex } = this.getStationVacantEquipmentInfo(station)
+    const { isEquipmentVacant, vacantEquipmentIndices } = this.getStationVacantEquipmentInfo(station)
     const isStationQueueNotEmpty = this.queues[station].length > 0
 
-    if (isStationQueueNotEmpty && isEquipmentVacant) {
+    while (isStationQueueNotEmpty && isEquipmentVacant) {
       const customer: Customer | any = this.queues[station].shift()
+      const vacantEquipmentIndex: number | any = vacantEquipmentIndices.shift()
+
       this.assignCustomerToVacantEquipment(station, vacantEquipmentIndex, customer)
     }
-  }
-
-  updateCustomerDwellTimeAndExitSimulation(customer: Customer | any) {
-    const dwellTime = calculateTotalDwellTime(customer)
-
-    customer.dwellTime = dwellTime
-    customer.state = State.EXIT
-
-    averageDemographicDwellTimeManager.updateDemographicDwellTime(customer.demographic, dwellTime)
   }
 
   updateEquipmentStatusToVacant(equipment: Equipment) {
@@ -79,7 +74,7 @@ class StationManager {
           equipment.countdown--
 
           if (equipment.countdown === 0) {
-            this.updateCustomerDwellTimeAndExitSimulation(equipment.customer)
+            updateCustomerDwellTimeAndExitSimulation(equipment.customer)
             this.updateEquipmentStatusToVacant(equipment)
           }
         }
