@@ -1,12 +1,13 @@
 import { Customer } from '../types/customer'
 import { Demographic, DemographicArrivalProb } from '../enums/demographic'
-import { StateFromArrival } from '../enums/states'
+import { State } from '../enums/states'
 import { StateFromArrivalProb } from '../enums/probabilities'
 import { Station } from '../enums/station'
 import { returnResultBasedOnProb } from '../utils/returnResultBasedOnProb'
+import { mainQueueManager } from './mainQueueManager'
 import { stationManager } from './stationManager'
 
-const randomizeStateFromArrival = (): StateFromArrival => returnResultBasedOnProb(StateFromArrivalProb)
+const randomizeStateFromArrival = (): State => returnResultBasedOnProb(StateFromArrivalProb)
 const randomizeDemographic = (): Demographic => returnResultBasedOnProb(DemographicArrivalProb)
 
 const generateCustomer = (): Customer => {
@@ -32,19 +33,19 @@ export const generateCustomerFromArrivalRate = (arrivalRate: number, callback: (
 
 export const appendCustomerToArrivalStateQueue = (customer: Customer): void => {
   switch (customer.state) {
-    case StateFromArrival.MAIN_QUEUE:
-      // TODO: Append customer to main queue -> main queue logic 
+    case State.MAIN_QUEUE:
+      mainQueueManager.appendCustomerToMainQueue(customer)
       break
-    case StateFromArrival.ATMS:
+    case State.ATMS:
       stationManager.appendCustomerToStationQueue(Station.ATMS, customer)
       break
-    case StateFromArrival.ATM_COINS:
+    case State.ATM_COINS:
       stationManager.appendCustomerToStationQueue(Station.ATM_COINS, customer)
       break
-    case StateFromArrival.VTMS:
+    case State.VTMS:
       stationManager.appendCustomerToStationQueue(Station.VTMS, customer)
       break
-    case StateFromArrival.RETURN_LATER_QN:
+    case State.RETURN_LATER_QN:
       // TODO: Append customer to the return later queue number queue (counters mixed queue)
       break
   }
