@@ -56,10 +56,19 @@ If route 02 happens and the customer misses their queue number, they can either 
 
 
 
-# General TTD:
-[] Review & Cleanup Code + Lint
-[] Link all components
-[] The functions of updateStationEquipment and shiftCustomerFromStationQueueToVacantEquipment should be running repeatedly (always running)
-[] The functions of updateQueueManagerInfo and handleQueueManagerDiscussion should be running repeatedly (always running)
-[] The function of processCustomersFromReturnLaterQueueAgainQueue should be running repeatedly (always running)
-[] Fix timer of countdowns
+# Effects of Solutions to the Base Model
+1. Shared Database
+- Parameters Affected: Reduce Arrival Rate
+- How to Implement: 
+
+2. Education of Staff
+- Parameters Affected: Remove Assistance Route, Solving Issue Probability is Higher
+- How to Implement: 
+
+3. Remove VTM Need for Verification
+- Parameters Affected: Reduced Station Time for VTM, Reduced Station Time for App Booth
+- How to Implement: 
+
+4. Better Methods for Prevention of Errors in Common Online Customer Actions
+- Parameters Affected: Remove Missing Documents Route
+- How to Implement: 
