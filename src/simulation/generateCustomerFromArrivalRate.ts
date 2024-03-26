@@ -5,6 +5,7 @@ import { StateFromArrivalProb } from '../enums/probabilities'
 import { Station } from '../enums/station'
 import { returnResultBasedOnProb } from '../utils/returnResultBasedOnProb'
 import { mainQueueManager } from './mainQueueManager'
+import { returnLaterQueueNumberManager } from './returnLaterQueueNumberManager'
 import { stationManager } from './stationManager'
 
 const randomizeStateFromArrival = (): State => returnResultBasedOnProb(StateFromArrivalProb)
@@ -22,8 +23,8 @@ const generateCustomer = (): Customer => {
 }
 
 export const generateCustomerFromArrivalRate = (arrivalRate: number, callback: (customer: Customer) => void): void => {
-  const intervalInSeconds = 1 / arrivalRate
-  const intervalInMilliseconds = intervalInSeconds * 1000
+  const intervalInSeconds: number = 1 / arrivalRate
+  const intervalInMilliseconds: number = intervalInSeconds * 1000
 
   setTimeout(() => {
     const customer: Customer = generateCustomer()
@@ -46,7 +47,7 @@ export const appendCustomerToArrivalStateQueue = (customer: Customer): void => {
       stationManager.appendCustomerToStationQueue(Station.VTMS, customer)
       break
     case State.RETURN_LATER_QN:
-      // TODO: Append customer to the return later queue number queue (counters mixed queue)
+      returnLaterQueueNumberManager.appendCustomerToReturnLaterQueueNumberQueue(customer)
       break
   }
 }
