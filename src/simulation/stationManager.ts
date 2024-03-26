@@ -32,11 +32,11 @@ class StationManager {
   }
 
   getStationVacantEquipmentInfo(station: Station): { isEquipmentVacant: boolean, vacantEquipmentIndices: number[] } {
-    const vacantEquipmentIndices = this.equipment[station].reduce((indices: number[], equipment: Equipment, index: number) => {
+    const vacantEquipmentIndices: number[] = this.equipment[station].reduce((indices: number[], equipment: Equipment, index: number) => {
       if (equipment.status === StationEquipmentStatus.VACANT) indices.push(index)
       return indices
     }, [])
-    const isEquipmentVacant = vacantEquipmentIndices.length > 0
+    const isEquipmentVacant: boolean = vacantEquipmentIndices.length > 0
     
     return { isEquipmentVacant, vacantEquipmentIndices }
   }
@@ -51,7 +51,7 @@ class StationManager {
 
   shiftCustomerFromStationQueueToVacantEquipment(station: Station) {
     const { isEquipmentVacant, vacantEquipmentIndices } = this.getStationVacantEquipmentInfo(station)
-    const isStationQueueNotEmpty = this.queues[station].length > 0
+    const isStationQueueNotEmpty: boolean = this.queues[station].length > 0
 
     while (isStationQueueNotEmpty && isEquipmentVacant) {
       const customer: Customer | any = this.queues[station].shift()
