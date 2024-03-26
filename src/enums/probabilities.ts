@@ -32,7 +32,7 @@ export enum StateFromQueueManagerRequiresAssistanceProb {
 }
 
 export enum StateFromMissingDocumentsProb {
-  RETURNING_LATER_QA = 0.700,
+  RETURN_LATER_QA = 0.700,
   EXIT = 0.300
 }
 
@@ -42,6 +42,6 @@ export enum StateFromReturnLaterQNProb {
 }
 
 export enum StateFromMissingQNProb {
-  RETURNING_LATER_QN = 0.500,
+  RETURN_LATER_QN = 0.500,
   EXIT = 0.500
 }
