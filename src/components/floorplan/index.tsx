@@ -1,33 +1,121 @@
-import { ReactElement, useState, useEffect, useRef } from 'react'
-import Customer from './Customer'
+import { ReactElement, useState, useEffect } from 'react'
+import CustomerElement from './Customer'
 import './Floorplan.css'
+// import { CustomerPosition } from '../../enums/customerPosition'
+// import { CustomerAnimationState } from '../../enums/customerAnimationState'
+import { Customer } from '../../types/customer'
 
 const Floorplan = (): ReactElement => {
-  const [spawnEnabled, setSpawnEnabled] = useState(false)
-  const [customerSpawnRate, setCustomerSpawnRate] = useState(3000)
+  const [startSimulation, setStartSimulation] = useState<boolean>(false)
+  const [customerArrivalRate, setCustomerArrivalRate] = useState<number>(3000)
   
-  const [spawnedCustomers, setSpawnedCustomers] = useState([])
-  const [mainQueue, setMainQueue] = useState(0)
+  // Arriving Customers to Main Queue
+  const [arrivingCustomers, setArrivingCustomers] = useState<Customer[]>([])
+  const [mainQueue, setMainQueue] = useState<Customer[]>([])
 
+  // Customers in Waiting Area to Counters
+  const waitingAreaCapacity = 15
+  const [waitingArea, setWaitingArea] = useState<Customer[]>([])
+  const [counter1, setCounter1] = useState<boolean>(false)
+  const [counter2, setCounter2] = useState<boolean>(false)
+  const [counter3, setCounter3] = useState<boolean>(false)
+  const [counter4, setCounter4] = useState<boolean>(false)
+  const [counter5, setCounter5] = useState<boolean>(false)
+  const [counter6, setCounter6] = useState<boolean>(false)
+  const [counter7, setCounter7] = useState<boolean>(false)
+  const [counter8, setCounter8] = useState<boolean>(false)
+  const [counter9, setCounter9] = useState<boolean>(false)
+  const [counter10, setCounter10] = useState<boolean>(false)
+  const [counter11, setCounter11] = useState<boolean>(false)
+
+  // Customers in App Booths
+  const [appBooth1, setAppBooth1] = useState<boolean>(false)
+  const [appBooth2, setAppBooth2] = useState<boolean>(false)
+
+  // Customers in ATMs and VTMs
+  const [atm1, setAtm1] = useState<boolean>(false)
+  const [atm2, setAtm2] = useState<boolean>(false)
+  const [atm3, setAtm3] = useState<boolean>(false)
+  const [atm4, setAtm4] = useState<boolean>(false)
+  const [atm5, setAtm5] = useState<boolean>(false)
+  const [atm6, setAtm6] = useState<boolean>(false)
+  const [atmCoins, setAtmCoins] = useState<number>(0)
+  const [vtm1, setVtm1] = useState<boolean>(false)
+  const [vtm2, setVtm2] = useState<boolean>(false)
+  const [vtm3, setVtm3] = useState<boolean>(false)
+
+  // Customer Object
+  const newCustomer: Customer = { 
+    id: new Date().getTime(),
+    position: 'START',
+    element: <CustomerElement />
+  }
+
+  // Run code when the component renders
   useEffect(() => {
-    if (!spawnEnabled) return
+    if (!startSimulation) return
 
     const spawnCustomer = () => {
-      // Create a new customer object
-      const newCustomer = { id: new Date().getTime(), inQueue: false }
-      setSpawnedCustomers([newCustomer])
+      // setArrivingCustomers([newCustomer])
+      setArrivingCustomers(prev => [...prev, newCustomer])
 
       // Move customer to the queue after the animation duration
       setTimeout(() => {
-        setMainQueue(prev => prev + 1)
-        setSpawnedCustomers([])
+        setMainQueue(prevQueue => [...prevQueue, newCustomer])
+        setArrivingCustomers([])
       }, 3000)
-    };
+    }
 
-    const intervalId = setInterval(spawnCustomer, customerSpawnRate)
+    const intervalId = setInterval(spawnCustomer, customerArrivalRate)
 
     return () => clearInterval(intervalId)
-  }, [spawnEnabled, customerSpawnRate])
+  }, [startSimulation, customerArrivalRate])
+
+  useEffect(() => {
+    // Move customer from main queue to waiting area if there's space
+    const moveCustomerToWaitingArea = () => {
+      if (mainQueue.length > 0 && waitingArea.length < waitingAreaCapacity) {
+        const customerToMove = mainQueue[0]
+        customerToMove.position = 'WAITING_AREA'
+        setWaitingArea(prevWaiting => [...prevWaiting, customerToMove])
+        setMainQueue(prevQueue => prevQueue.slice(1))
+      }
+    }
+
+    const moveInterval = setInterval(moveCustomerToWaitingArea, 1000)
+    return () => clearInterval(moveInterval)
+  }, [mainQueue, waitingArea.length])
+
+  useEffect(() => {
+    const moveCustomerToCounter = () => {
+      // Check if there is at least one customer in the waiting area and at least one counter available
+      if (waitingArea.length > 0 && [counter1, counter2, counter3, counter4, counter5, counter6, counter7, counter8, counter9, counter10, counter11].includes(false)) {
+        // Find the first available counter
+        const counters = [setCounter1, setCounter2, setCounter3, setCounter4, setCounter5, setCounter6, setCounter7, setCounter8, setCounter9, setCounter10, setCounter11]
+        const availableCounterIndex = counters.findIndex(counterSetter => !eval(counterSetter.name.replace("set", "").toLowerCase()))
+        
+        if (availableCounterIndex !== -1) {
+          // Move the first customer in the waiting area to the available counter
+          const customerToMove = waitingArea.shift();
+          counters[availableCounterIndex](true); // Mark the counter as occupied
+          
+          // Simulate the customer being serviced for 2 seconds, then release the counter
+          setTimeout(() => {
+            counters[availableCounterIndex](false); // Mark the counter as available again after 2 seconds
+          }, 2000);
+  
+          // Update the waiting area state without the moved customer
+          setWaitingArea([...waitingArea]);
+        }
+      }
+    };
+  
+    // Periodically check for available counters and move customers to them
+    const intervalId = setInterval(moveCustomerToCounter, 1000); // Check every second
+  
+    return () => clearInterval(intervalId);
+  }, [waitingArea, counter1, counter2, counter3, counter4, counter5, counter6, counter7, counter8, counter9, counter10, counter11]);
+  
 
   return (
     <div className='floorplan'>
@@ -83,6 +171,13 @@ const Floorplan = (): ReactElement => {
         {/* Start of Waiting Area */}
         <div className='waiting-area'>
           <p>WAITING AREA</p>
+          <div className='waiting-area-grid'>
+            {Array.from({ length: waitingAreaCapacity }, (_, index) => (
+              <div key={index} className='waiting-area-cell'>
+                {waitingArea[index] ? waitingArea[index].element : null}
+              </div>
+            ))}
+          </div>
         </div>
         {/* End of Waiting Area */}
 
@@ -166,8 +261,10 @@ const Floorplan = (): ReactElement => {
       <div className='main-queue'>
         <p>MAIN QUEUE</p>
         <div>
-          {Array.from({ length: mainQueue }, (_, index) => (
-            <Customer key={index} />
+          {mainQueue.map((customer) => (
+            <div key={customer.id} className="customer moving-to-waiting-area">
+              {customer.element}
+            </div>
           ))}
         </div>
       </div>
@@ -175,9 +272,9 @@ const Floorplan = (): ReactElement => {
 
       {/* Start of Spawning Section */}
       <div className='spawning-section'>
-        {spawnedCustomers.map((_, customerIndex) => (
-          <div key={customerIndex} className="customer">
-            <Customer />
+        {arrivingCustomers.map((customer) => (
+          <div key={customer.id} className="customer moving-to-queue">
+            {customer.element}
           </div>
         ))}
       </div>

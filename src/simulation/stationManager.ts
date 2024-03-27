@@ -31,6 +31,39 @@ class StationManager {
     this.queues[station].push(customer)
   }
 
+  getStationQueueLengthAndEquipmentStatusInfo(): Record<string, { queueLength: number[], equipmentStatus: Array<{status: StationEquipmentStatus, customerId: string | null}> }> {
+    const information: Record<string, { queueLength: number[], equipmentStatus: Array<{status: StationEquipmentStatus, customerId: string | null}> }> = {}
+  
+    Object.entries(this.queues).forEach(([station, queue]) => {
+      // Map each piece of equipment to include both status and the occupying customer's ID (if any)
+      const equipmentStatus = this.equipment[station as Station].map(equipment => ({
+        status: equipment.status,
+        // Assuming customer has an 'id' property; adjust as necessary
+        customerId: equipment.customer ? equipment.customer.id : null,
+        countdown: equipment.countdown
+      }));
+      
+      if (station === Station.COUNTERS) {
+        // Separate counting for digital and physical queues
+        const digitalQueueLength = queue.filter(customer => customer.isFromDigitalQueue === true).length;
+        const physicalQueueLength = queue.filter(customer => !customer.isFromDigitalQueue).length; // Includes customers where isFromDigitalQueue is false or undefined
+  
+        information[station] = {
+          queueLength: [digitalQueueLength, physicalQueueLength],
+          equipmentStatus
+        };
+      } else {
+        // Original logic for other stations
+        information[station] = {
+          queueLength: [queue.length],
+          equipmentStatus
+        };
+      }
+    });
+  
+    return information;
+  }
+
   getStationVacantEquipmentInfo(station: Station): { isEquipmentVacant: boolean, vacantEquipmentIndices: number[] } {
     const vacantEquipmentIndices: number[] = this.equipment[station].reduce((indices: number[], equipment: Equipment, index: number) => {
       if (equipment.status === StationEquipmentStatus.VACANT) indices.push(index)
@@ -44,18 +77,18 @@ class StationManager {
   assignCustomerToVacantEquipment(station: Station, vacantEquipmentIndex: number, customer: Customer) {
     this.equipment[station][vacantEquipmentIndex] = {
       status: StationEquipmentStatus.OCCUPIED,
-      countdown: calculateTotalStationTime(StateTimings[station], customer),
+      countdown:  Math.round(calculateTotalStationTime(StateTimings[station], customer) / 100),
       customer
     }
   }
 
   shiftCustomerFromStationQueueToVacantEquipment(station: Station) {
-    const { isEquipmentVacant, vacantEquipmentIndices } = this.getStationVacantEquipmentInfo(station)
-    const isStationQueueNotEmpty: boolean = this.queues[station].length > 0
+    // const { isEquipmentVacant, vacantEquipmentIndices } = this.getStationVacantEquipmentInfo(station)
+    // const isStationQueueNotEmpty: boolean = this.queues[station].length > 0
 
-    while (isStationQueueNotEmpty && isEquipmentVacant) {
+    while (this.queues[station].length > 0 && this.getStationVacantEquipmentInfo(station).isEquipmentVacant) {
       const customer: Customer | any = this.queues[station].shift()
-      const vacantEquipmentIndex: number | any = vacantEquipmentIndices.shift()
+      const vacantEquipmentIndex: number | any = this.getStationVacantEquipmentInfo(station).vacantEquipmentIndices.shift()
 
       this.assignCustomerToVacantEquipment(station, vacantEquipmentIndex, customer)
     }
@@ -82,6 +115,16 @@ class StationManager {
 
       this.shiftCustomerFromStationQueueToVacantEquipment(station as Station)
     })
+  }
+
+  // Repeatedly running simulation
+  startEquipmentUpdateLoop() {
+    const intervalId = setInterval(() => {
+      this.updateStationEquipment();
+    }, 100); // Adjust time as necessary
+  
+    // Return a cleanup function
+    return () => clearInterval(intervalId);
   }
 }
 

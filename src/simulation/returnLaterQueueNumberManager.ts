@@ -22,6 +22,7 @@ class ReturnLaterQueueNumberManager {
         this.handleCustomerActionFromMissingQueue(customer)
         break
       case State.COUNTERS:
+        customer.isFromDigitalQueue = true
         stationManager.appendCustomerToStationQueue(Station.COUNTERS, customer)
         break
     }

@@ -4,6 +4,7 @@ import { State } from '../enums/states'
 import { StateFromArrivalProb } from '../enums/probabilities'
 import { Station } from '../enums/station'
 import { returnResultBasedOnProb } from '../utils/returnResultBasedOnProb'
+import { convertToAdjustedInterval } from '../utils/convertToAdjustedInterval'
 import { mainQueueManager } from './mainQueueManager'
 import { returnLaterQueueNumberManager } from './returnLaterQueueNumberManager'
 import { stationManager } from './stationManager'
@@ -24,12 +25,11 @@ const generateCustomer = (): Customer => {
 
 export const generateCustomerFromArrivalRate = (arrivalRate: number, callback: (customer: Customer) => void): void => {
   const intervalInSeconds: number = 1 / arrivalRate
-  const intervalInMilliseconds: number = intervalInSeconds * 1000
 
-  setTimeout(() => {
+  setInterval(() => {
     const customer: Customer = generateCustomer()
     callback(customer)
-  }, intervalInMilliseconds)
+  }, convertToAdjustedInterval(intervalInSeconds))
 }
 
 export const appendCustomerToArrivalStateQueue = (customer: Customer): void => {

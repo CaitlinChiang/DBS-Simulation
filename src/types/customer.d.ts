@@ -8,4 +8,5 @@ export type Customer = {
   state: State | Station
   dwellTime: number
   qaDelayTime?: number
+  isFromDigitalQueue?: boolean
 }

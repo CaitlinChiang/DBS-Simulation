@@ -22,6 +22,17 @@ class MainQueueManager {
     this.handleCustomerActionFromStartOfMainQueue(customer)
   }
 
+  getMainQueueLengthAndQueueManagerInfo() {
+    return {
+      mainQueueLength: this.mainQueue.length,
+      isQueueManagerAvailable: this.isQueueManagerAvailable,
+      queueManagerDiscussionTimer: this.queueManagerDiscussionTimer,
+      isQueueManagerDiscussing: this.queueManagerDiscussionTimer > 0,
+      queueManagerAssistanceTimer: this.queueManagerAssistanceTimer,
+      isQueueManagerAssisting: this.queueManagerAssistanceTimer > 0
+    }
+  }
+
   handleCustomerActionFromStartOfMainQueue(customer: Customer) {
     const customerFirstActionFromMainQueue: State = returnResultBasedOnProb(StateFromMainQueueProb)
 
@@ -52,7 +63,7 @@ class MainQueueManager {
     return new Promise((resolve) => {
       if (isDiscussionTimer) {
         const averageTimeSpentInQueueManagerDiscussion: number = returnResultBasedOnDist(QUEUE_MANAGER_DISCUSSION_DIST)
-        this.queueManagerDiscussionTimer = calculateTotalStationTime(averageTimeSpentInQueueManagerDiscussion, customerToProcess)
+        this.queueManagerDiscussionTimer = Math.round(calculateTotalStationTime(averageTimeSpentInQueueManagerDiscussion, customerToProcess) / 100)
 
         setTimeout(() => {
           this.queueManagerDiscussionTimer = 0
@@ -130,6 +141,17 @@ class MainQueueManager {
         updateCustomerDwellTimeAndExitSimulation(customer)
         break
     }
+  }
+
+  // Repeatedly running simulation
+  startMainQueueLoop() {
+    const intervalId = setInterval(() => {
+      this.updateQueueManagerInfo();
+      // this.handleQueueManagerDiscussion()
+    }, 100); // Adjust time as necessary
+  
+    // Return a cleanup function
+    return () => clearInterval(intervalId);
   }
 }
 
