@@ -87,7 +87,7 @@ Rationale for Adjusting Probabilities to Remove Requires Assistance Route:
 ### 3. Remove VTM Need for Verification
 - Parameters Affected: Reduced Station Time for VTM, Reduced Station Time for App Booth
 - How to Implement: 
-1. Reduce VTM Average Time from 516 seconds -> 201.36 seconds
+1. Reduce VTM Average Time from 516 seconds -> 201.36 (round down to 201) seconds
 2. Staff can be allocated to an additional app booth, so instead of 2 app booths there are now 3
 
 Rationale for Adjusting the Average Times:
