@@ -1,13 +1,13 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
+import { GlobalProvider } from './hooks/useGlobal'
 import App from './App.tsx'
 import './index.css'
-import { SimulationSpeedProvider } from './components/hooks/useSimulationSpeed';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <SimulationSpeedProvider>
+    <GlobalProvider>
       <App />
-    </SimulationSpeedProvider>
+    </GlobalProvider>
   </React.StrictMode>,
 )

@@ -11,14 +11,25 @@ export enum StateFromMainQueueProb {
   EXIT = 0.050
 }
 
-export enum StateFromQueueManagerDiscussionResultProb {
+export enum StateFromQueueManagerDiscussionProb {
   QUEUE_MANAGER_DIRECTS = 0.767,
   QUEUE_MANAGER_REQUIRES_ASSISTANCE = 0.163,
   CUSTOMER_MISSING_DOCUMENTS = 0.023,
-  EXIT = 0.047,
+  EXIT = 0.047
+}
+export enum StateFromQueueManagerDiscussionProbSolutionStaffEducation {
+  QUEUE_MANAGER_DIRECTS = 0.921,
+  CUSTOMER_MISSING_DOCUMENTS = 0.023,
+  EXIT = 0.056
+}
+export enum StateFromQueueManagerDiscussionProbSolutionErrorPrevention {
+  QUEUE_MANAGER_DIRECTS = 0.785,
+  QUEUE_MANAGER_REQUIRES_ASSISTANCE = 0.167,
+  CUSTOMER_MISSING_DOCUMENTS = 0.023,
+  EXIT = 0.048
 }
 
-export enum StateFromQueueManagerDirectProb {
+export enum StateFromQueueManagerDirectsProb {
   APP_BOOTHS = 0.257,
   COUNTERS = 0.510,
   ATMS = 0.140,
@@ -31,17 +42,17 @@ export enum StateFromQueueManagerRequiresAssistanceProb {
   EXIT = 0.800
 }
 
-export enum StateFromMissingDocumentsProb {
+export enum StateFromCustomerMissingDocumentsProb {
   RETURN_LATER_QA = 0.700,
   EXIT = 0.300
 }
 
 export enum StateFromReturnLaterQNProb {
-  MISSED_QUEUE = 0.200,
-  COUNTERS = 0.800
+  COUNTERS = 0.800,
+  MISSED_QUEUE = 0.200
 }
 
-export enum StateFromMissingQNProb {
+export enum StateFromMissedQueueProb {
   RETURN_LATER_QN = 0.500,
   EXIT = 0.500
 }

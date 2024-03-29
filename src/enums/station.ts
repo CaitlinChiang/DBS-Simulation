@@ -6,6 +6,14 @@ export enum Station {
   VTMS = 'VTMS'
 }
 
+export enum StationEquipmentAverageUsageTime {
+  APP_BOOTHS = 360,
+  COUNTERS = 1560,
+  ATMS = 300,
+  ATM_COINS = 660,
+  VTMS = 516
+}
+
 export enum StationEquipmentCount {
   APP_BOOTHS = 2,
   COUNTERS = 11,

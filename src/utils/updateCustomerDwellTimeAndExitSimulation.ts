@@ -1,6 +1,6 @@
 import { Customer } from '../types/customer'
 import { State } from '../enums/states'
-import { averageDemographicDwellTimeManager } from './averageDemographicDwellTimeManager'
+import { demographicAverageDwellTimeManager } from './demographicAverageDwellTimeManager'
 import { calculateTotalDwellTime } from './calculateTime'
 
 export const updateCustomerDwellTimeAndExitSimulation = (customer: Customer | any) => {
@@ -9,5 +9,5 @@ export const updateCustomerDwellTimeAndExitSimulation = (customer: Customer | an
   customer.dwellTime = dwellTime
   customer.state = State.EXIT
 
-  averageDemographicDwellTimeManager.updateDemographicDwellTime(customer.demographic, dwellTime)
+  demographicAverageDwellTimeManager.updateDemographicDwellTimeData(customer.demographic, dwellTime)
 }

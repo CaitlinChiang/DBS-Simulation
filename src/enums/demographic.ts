@@ -5,7 +5,7 @@ export enum Demographic {
 }
 
 export enum DemographicAdditionalServiceTime {
-  LOCAL_ELDERLY = 480,
+  LOCAL_ELDERLY = 360,
   LOCAL_ADULT = 0,
   FOREIGNER = 240
 }

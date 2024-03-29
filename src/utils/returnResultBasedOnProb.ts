@@ -1,9 +1,9 @@
 export const returnResultBasedOnProb = <T>(enumObj: { [s: string]: T }): any => {
   // Convert the enum to an array of [key, probability] pairs
-  const entries = Object.entries(enumObj).filter(([key]) => isNaN(Number(key))) as [string, T][];
+  const entries = Object.entries(enumObj).filter(([key]) => isNaN(Number(key))) as [string, T][]
   
   // Extract and work with probabilities
-  const probabilities = entries.map(([_, value]) => Number(value)).filter(value => !isNaN(value));
+  const probabilities = entries.map(([_, value]) => Number(value)).filter(value => !isNaN(value))
 
   // Generate a random number between 0 and 1
   const random = Math.random()
