@@ -1,9 +1,12 @@
 import { Customer } from '../types/customer'
+import { MainQueueLengthAndQueueManagerInfo } from '../types/managerInfo'
 import { State, EventState } from '../enums/states'
-import { StateFromMainQueueProb, StateFromQueueManagerDiscussionResultProb, StateFromQueueManagerDirectProb, StateFromQueueManagerRequiresAssistanceProb, StateFromMissingDocumentsProb } from '../enums/probabilities'
+import { StateFromMainQueueProb, StateFromQueueManagerDirectsProb, StateFromQueueManagerRequiresAssistanceProb, StateFromCustomerMissingDocumentsProb } from '../enums/probabilities'
 import { QUEUE_MANAGER_DISCUSSION_DIST, QUEUE_MANAGER_ASSISTANCE_DIST } from '../enums/distributions'
 import { Station } from '../enums/station'
 import { calculateTotalStationTime } from '../utils/calculateTime'
+import { modifyInterval } from '../utils/modifyInterval'
+import { returnAppropriateStateForQueueManagerDiscussionProb } from '../utils/returnAppropriateStateForQueueManagerDiscussionProb'
 import { returnResultBasedOnDist } from '../utils/returnResultBasedOnDist'
 import { returnResultBasedOnProb } from '../utils/returnResultBasedOnProb'
 import { updateCustomerDwellTimeAndExitSimulation } from '../utils/updateCustomerDwellTimeAndExitSimulation'
@@ -11,29 +14,29 @@ import { returnLaterQueueAgainManager } from './returnLaterQueueAgainManager'
 import { stationManager } from './stationManager'
 
 class MainQueueManager {
+  constructor() {}
+
   private mainQueue: Customer[] = []
   private isQueueManagerAvailable: boolean = true
   private queueManagerDiscussionTimer: number = 0
   private queueManagerAssistanceTimer: number = 0
 
-  constructor() {}
-
-  appendCustomerToMainQueue(customer: Customer) {
-    this.handleCustomerActionFromStartOfMainQueue(customer)
-  }
-
-  getMainQueueLengthAndQueueManagerInfo() {
+  getMainQueueLengthAndQueueManagerInfo(): MainQueueLengthAndQueueManagerInfo {
     return {
       mainQueueLength: this.mainQueue.length,
       isQueueManagerAvailable: this.isQueueManagerAvailable,
-      queueManagerDiscussionTimer: this.queueManagerDiscussionTimer,
       isQueueManagerDiscussing: this.queueManagerDiscussionTimer > 0,
+      isQueueManagerAssisting: this.queueManagerAssistanceTimer > 0,
+      queueManagerDiscussionTimer: this.queueManagerDiscussionTimer,
       queueManagerAssistanceTimer: this.queueManagerAssistanceTimer,
-      isQueueManagerAssisting: this.queueManagerAssistanceTimer > 0
     }
   }
 
-  handleCustomerActionFromStartOfMainQueue(customer: Customer) {
+  appendCustomerToMainQueue(customer: Customer): void {
+    this.handleCustomerActionFromStartOfMainQueue(customer)
+  }
+
+  handleCustomerActionFromStartOfMainQueue(customer: Customer): void {
     const customerFirstActionFromMainQueue: State = returnResultBasedOnProb(StateFromMainQueueProb)
 
     switch (customerFirstActionFromMainQueue) {
@@ -46,7 +49,7 @@ class MainQueueManager {
     }
   }
 
-  updateQueueManagerInfo() {
+  updateQueueManagerInfo(): void {
     if (this.queueManagerDiscussionTimer > 0) this.queueManagerDiscussionTimer--
     if (this.queueManagerAssistanceTimer > 0) this.queueManagerAssistanceTimer--
 
@@ -54,48 +57,38 @@ class MainQueueManager {
     if (isQueueManagerTimersBothZero) this.isQueueManagerAvailable = true
   }
 
-  isSystemAbleToProcessNextCustomer() {
+  isSystemAbleToProcessNextCustomer(): boolean {
     const isMainQueueNotEmpty: boolean = this.mainQueue.length > 0
+
     if (isMainQueueNotEmpty && this.isQueueManagerAvailable) return true
+    return false
   }
 
-  startTimerForQueueManager(customerToProcess: Customer, isDiscussionTimer?: boolean, isAssistanceTimer?: boolean): Promise<void> {
+  startDiscussionTimerForQueueManager(customer: Customer): Promise<void> {
     return new Promise((resolve) => {
-      if (isDiscussionTimer) {
-        const averageTimeSpentInQueueManagerDiscussion: number = returnResultBasedOnDist(QUEUE_MANAGER_DISCUSSION_DIST)
-        this.queueManagerDiscussionTimer = Math.round(calculateTotalStationTime(averageTimeSpentInQueueManagerDiscussion, customerToProcess) / 100)
+      const averageTimeSpentInQueueManagerDiscussion: number = returnResultBasedOnDist(QUEUE_MANAGER_DISCUSSION_DIST)
+      this.queueManagerDiscussionTimer = calculateTotalStationTime(averageTimeSpentInQueueManagerDiscussion, customer)
 
-        setTimeout(() => {
-          this.queueManagerDiscussionTimer = 0
-          resolve()
-        }, this.queueManagerDiscussionTimer)
-      }
-      
-      if (isAssistanceTimer) {
-        const averageTimeSpentInQueueManagerAssistance: number = returnResultBasedOnDist(QUEUE_MANAGER_ASSISTANCE_DIST)
-        this.queueManagerAssistanceTimer = calculateTotalStationTime(averageTimeSpentInQueueManagerAssistance, customerToProcess)
-
-        setTimeout(() => {
-          this.queueManagerAssistanceTimer = 0
-          resolve()
-        }, this.queueManagerAssistanceTimer)
-      }
+      setTimeout(() => {
+        this.queueManagerDiscussionTimer = 0
+        resolve()
+      }, this.queueManagerDiscussionTimer)
     })
   }
 
-  handleQueueManagerDiscussion(customer: Customer) {
+  handleQueueManagerDiscussion(customer: Customer): void {
     customer.state = State.QUEUE_MANAGER_DISCUSSION
     this.mainQueue.push(customer)
 
     if (!this.isSystemAbleToProcessNextCustomer) return
 
-    const queueManagerActionFromDiscussion: State | EventState = returnResultBasedOnProb(StateFromQueueManagerDiscussionResultProb)
+    const queueManagerActionFromDiscussion: State | EventState = returnAppropriateStateForQueueManagerDiscussionProb()
     const customerToProcess: Customer | any = this.mainQueue.shift()
 
-    this.startTimerForQueueManager(customerToProcess, true, false).then(() => {
+    this.startDiscussionTimerForQueueManager(customerToProcess).then(() => {
       switch (queueManagerActionFromDiscussion) {
         case EventState.QUEUE_MANAGER_DIRECTS:
-          this.handleQueueManagerDirectToStation(customerToProcess)
+          this.handleQueueManagerDirectsToStation(customerToProcess)
           break
         case EventState.QUEUE_MANAGER_REQUIRES_ASSISTANCE:
           this.handleQueueMangerRequiresAssistance(customerToProcess)
@@ -103,37 +96,49 @@ class MainQueueManager {
         case EventState.CUSTOMER_MISSING_DOCUMENTS:
           this.handleCustomerMissingDocuments(customerToProcess)
           break
-        case State.EXIT: // SOLVES CUSTOMER ISSUE SUCCESSFULLY
+        case State.EXIT: // solves customer issue successfully
           updateCustomerDwellTimeAndExitSimulation(customerToProcess)
           break
       }
     })
   }
 
-  handleQueueManagerDirectToStation(customer: Customer) {
-    const station: Station = returnResultBasedOnProb(StateFromQueueManagerDirectProb)
+  handleQueueManagerDirectsToStation(customer: Customer): void {
+    const station: Station = returnResultBasedOnProb(StateFromQueueManagerDirectsProb)
     stationManager.appendCustomerToStationQueue(station, customer)
   }
 
-  handleQueueMangerRequiresAssistance(customer: Customer) {
+  startAssistanceTimerForQueueManager(customer: Customer): Promise<void> {
+    return new Promise((resolve) => {
+      const averageTimeSpentInQueueManagerAssistance: number = returnResultBasedOnDist(QUEUE_MANAGER_ASSISTANCE_DIST)
+      this.queueManagerAssistanceTimer = calculateTotalStationTime(averageTimeSpentInQueueManagerAssistance, customer)
+
+      setTimeout(() => {
+        this.queueManagerAssistanceTimer = 0
+        resolve()
+      }, this.queueManagerAssistanceTimer)
+    })
+  }
+
+  handleQueueMangerRequiresAssistance(customer: Customer): void {
     const queueManagerActionFromRequiresAssistance: State | EventState = returnResultBasedOnProb(StateFromQueueManagerRequiresAssistanceProb)
 
-    this.startTimerForQueueManager(customer, false, true).then(() => {
+    this.startAssistanceTimerForQueueManager(customer).then(() => {
       switch (queueManagerActionFromRequiresAssistance) {
         case EventState.QUEUE_MANAGER_DIRECTS:
-          this.handleQueueManagerDirectToStation(customer)
+          this.handleQueueManagerDirectsToStation(customer)
           break
-        case State.EXIT: // SOLVES CUSTOMER ISSUE SUCCESSFULLY
+        case State.EXIT: // solves customer issue successfully
           updateCustomerDwellTimeAndExitSimulation(customer)
           break
       }
     })
   }
 
-  handleCustomerMissingDocuments(customer: Customer) {
-    const customerMissingDocumentAction: State = returnResultBasedOnProb(StateFromMissingDocumentsProb)
+  handleCustomerMissingDocuments(customer: Customer): void {
+    const customerActionFromMissingDocuments: State = returnResultBasedOnProb(StateFromCustomerMissingDocumentsProb)
 
-    switch (customerMissingDocumentAction) {
+    switch (customerActionFromMissingDocuments) {
       case State.RETURN_LATER_QA:
         returnLaterQueueAgainManager.appendCustomerToReturnLaterQueueAgainQueue(customer)
         break
@@ -143,15 +148,12 @@ class MainQueueManager {
     }
   }
 
-  // Repeatedly running simulation
-  startMainQueueLoop() {
+  startSubsystemSimulation() {
     const intervalId = setInterval(() => {
-      this.updateQueueManagerInfo();
-      // this.handleQueueManagerDiscussion()
-    }, 100); // Adjust time as necessary
+      this.updateQueueManagerInfo()
+    }, modifyInterval(1000))
   
-    // Return a cleanup function
-    return () => clearInterval(intervalId);
+    return () => clearInterval(intervalId)
   }
 }
 

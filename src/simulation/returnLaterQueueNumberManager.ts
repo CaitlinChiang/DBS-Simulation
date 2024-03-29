@@ -1,37 +1,37 @@
 import { Customer } from '../types/customer'
 import { State, EventState } from '../enums/states'
-import { StateFromReturnLaterQNProb, StateFromMissingQNProb } from '../enums/probabilities'
+import { StateFromReturnLaterQNProb, StateFromMissedQueueProb } from '../enums/probabilities'
 import { Station } from '../enums/station'
 import { returnResultBasedOnProb } from '../utils/returnResultBasedOnProb'
-import { stationManager } from './stationManager'
 import { updateCustomerDwellTimeAndExitSimulation } from '../utils/updateCustomerDwellTimeAndExitSimulation'
+import { stationManager } from './stationManager'
 
 class ReturnLaterQueueNumberManager {
   constructor() {}
 
-  appendCustomerToReturnLaterQueueNumberQueue(customer: Customer) {
+  appendCustomerToReturnLaterQueueNumberQueue(customer: Customer): void {
     customer.state = State.RETURN_LATER_QN
     this.handleCustomerActionFromStartOfDigitalQueue(customer)
   }
 
-  handleCustomerActionFromStartOfDigitalQueue(customer: Customer) {
+  handleCustomerActionFromStartOfDigitalQueue(customer: Customer): void {
     const customerFirstActionFromDigitalQueue: State | EventState = returnResultBasedOnProb(StateFromReturnLaterQNProb)
 
     switch (customerFirstActionFromDigitalQueue) {
-      case EventState.MISSED_QUEUE:
-        this.handleCustomerActionFromMissingQueue(customer)
-        break
       case State.COUNTERS:
         customer.isFromDigitalQueue = true
         stationManager.appendCustomerToStationQueue(Station.COUNTERS, customer)
         break
+      case EventState.MISSED_QUEUE:
+        this.handleCustomerActionFromMissedQueue(customer)
+        break
     }
   }
 
-  handleCustomerActionFromMissingQueue(customer: Customer) {
-    const customerActionFromMissingQueue: State = returnResultBasedOnProb(StateFromMissingQNProb)
+  handleCustomerActionFromMissedQueue(customer: Customer): void {
+    const customerActionFromMissedQueue: State = returnResultBasedOnProb(StateFromMissedQueueProb)
 
-    switch (customerActionFromMissingQueue) {
+    switch (customerActionFromMissedQueue) {
       case State.RETURN_LATER_QN:
         this.appendCustomerToReturnLaterQueueNumberQueue(customer)
         break

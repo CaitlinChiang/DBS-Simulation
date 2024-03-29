@@ -1,56 +1,49 @@
 import { Customer } from '../types/customer'
 import { State } from '../enums/states'
-import { RETURN_LATER_QUEUE_AGAIN_RANGE } from '../enums/ranges'
-import { mainQueueManager } from './mainQueueManager'
+import { RETURN_LATER_QN_RANGE } from '../enums/ranges'
+import { modifyInterval } from '../utils/modifyInterval'
 import { returnResultBasedOnRange } from '../utils/returnResultBasedOnRange'
+import { mainQueueManager } from './mainQueueManager'
 
 class ReturnLaterQueueAgainManager {
-  private returnLaterQueueAgainQueue: Customer[] = []
-
   constructor() {}
 
-  appendCustomerToReturnLaterQueueAgainQueue(customer: Customer) {
-    customer.state = State.RETURN_LATER_QA
-    const delay =  Math.round(returnResultBasedOnRange(RETURN_LATER_QUEUE_AGAIN_RANGE) / 100)
-    customer.qaDelayTime = Date.now() + delay
+  private returnLaterQueueAgainQueue: Customer[] = []
 
-    this.returnLaterQueueAgainQueue.push(customer)
-    this.returnLaterQueueAgainQueue.sort((a, b) => a.qaDelayTime - b.qaDelayTime);
-  }
-
-  getReturnLaterQueueAgainQueueLength() {
+  getReturnLaterQueueAgainQueueLength(): number {
     return this.returnLaterQueueAgainQueue.length
   }
 
-  processCustomersFromReturnLaterQueueAgainQueue() {
+  appendCustomerToReturnLaterQueueAgainQueue(customer: Customer): void {
+    customer.state = State.RETURN_LATER_QA
+
+    const delay = returnResultBasedOnRange(RETURN_LATER_QN_RANGE)
+    customer.qaDelayTime = Date.now() + delay
+
+    this.returnLaterQueueAgainQueue.push(customer)
+    this.returnLaterQueueAgainQueue.sort((a, b) => a.qaDelayTime! - b.qaDelayTime!)
+  }
+
+  processCustomersFromReturnLaterQueueAgainQueue(): void {
     const isReturnLaterQueueAgainQueueEmpty: boolean = this.returnLaterQueueAgainQueue.length === 0
     if (isReturnLaterQueueAgainQueueEmpty) return
 
-    // this.returnLaterQueueAgainQueue.sort((a, b) => (a.qaDelayTime! - b.qaDelayTime!))
-    const now = Date.now();
-    const nextCustomer = this.returnLaterQueueAgainQueue[0]
-    // const customer: Customer | any = this.returnLaterQueueAgainQueue.shift()
+    const currentDateTime = Date.now()
+    const nextCustomer: Customer = this.returnLaterQueueAgainQueue[0]
+    const isCustomerDelayTimeLessThanOrEqualToCurrentDateTime: boolean = nextCustomer.qaDelayTime! <= currentDateTime
 
-    if (nextCustomer.qaDelayTime <= now) {
-      // Time to process this customer
-      mainQueueManager.appendCustomerToMainQueue(nextCustomer);
-      this.returnLaterQueueAgainQueue.shift(); // Remove the processed customer from the queue
+    if (isCustomerDelayTimeLessThanOrEqualToCurrentDateTime) {
+      mainQueueManager.appendCustomerToMainQueue(nextCustomer)
+      this.returnLaterQueueAgainQueue.shift()
     }
-
-    // setTimeout(() => {
-    //   mainQueueManager.appendCustomerToMainQueue(customer)
-    // }, customer.qaDelayTime)
   }
 
-  // Simulation
-  startQueueAgainLoop() {
+  startSubsystemSimulation() {
     const intervalId = setInterval(() => {
-      this.processCustomersFromReturnLaterQueueAgainQueue();
-      // this.handleQueueManagerDiscussion()
-    }, 100); // Adjust time as necessary
+      this.processCustomersFromReturnLaterQueueAgainQueue()
+    }, modifyInterval(1000))
   
-    // Return a cleanup function
-    return () => clearInterval(intervalId);
+    return () => clearInterval(intervalId)
   }
 }
 
