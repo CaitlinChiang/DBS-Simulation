@@ -1,6 +1,11 @@
 import { Demographic } from '../enums/demographic'
 import { StationEquipmentStatus } from '../enums/station'
 
+export type DemographicAverageDwellTimeInfo = {
+  demographic: Demographic
+  averageDwellTime: number
+}
+
 export type MainQueueLengthAndQueueManagerInfo = {
   mainQueueLength?: number
   isQueueManagerAvailable?: boolean
@@ -17,9 +22,4 @@ export type StationManagerInfo = {
     customerId: string | null
     countdown?: number
   }>
-}
-
-export type DemographicAverageDwellTimeInfo = {
-  demographic: Demographic
-  averageDwellTime: number
 }
