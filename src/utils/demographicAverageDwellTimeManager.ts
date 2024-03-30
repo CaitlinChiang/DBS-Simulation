@@ -1,3 +1,4 @@
+import { DemographicAverageDwellTimeInfo } from '../types/managerInfo'
 import { Demographic } from '../enums/demographic'
 
 class DemographicAverageDwellTimeManager {
@@ -11,13 +12,6 @@ class DemographicAverageDwellTimeManager {
     }
   }
 
-  updateDemographicDwellTimeData(demographic: Demographic, dwellTime: number) {
-    const demographicDwellTime = this.demographicDwellTimeData[demographic]
-
-    demographicDwellTime.totalDwellTime += dwellTime
-    demographicDwellTime.customerCount += 1
-  }
-
   calculateAverageDwellTime(demographic: Demographic): number {
     const demographicDwellTime = this.demographicDwellTimeData[demographic]
     const { totalDwellTime, customerCount } = demographicDwellTime
@@ -26,12 +20,19 @@ class DemographicAverageDwellTimeManager {
     return totalDwellTime / customerCount
   }
 
-  getDemographicAverageDwellTime(): { demographic: Demographic, averageDwellTime: number }[] {
+  getDemographicAverageDwellTimeInfo(): DemographicAverageDwellTimeInfo[] {
     return [
       { demographic: Demographic.LOCAL_ELDERLY, averageDwellTime: this.calculateAverageDwellTime(Demographic.LOCAL_ELDERLY) },
       { demographic: Demographic.LOCAL_ADULT, averageDwellTime: this.calculateAverageDwellTime(Demographic.LOCAL_ADULT) },
       { demographic: Demographic.FOREIGNER, averageDwellTime: this.calculateAverageDwellTime(Demographic.FOREIGNER) }
     ]
+  }
+
+  updateDemographicDwellTimeData(demographic: Demographic, dwellTime: number): void {
+    const demographicDwellTime = this.demographicDwellTimeData[demographic]
+
+    demographicDwellTime.totalDwellTime += dwellTime
+    demographicDwellTime.customerCount += 1
   }
 }
 

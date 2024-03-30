@@ -3,7 +3,7 @@ import { State } from '../enums/states'
 import { demographicAverageDwellTimeManager } from './demographicAverageDwellTimeManager'
 import { calculateTotalDwellTime } from './calculateTime'
 
-export const updateCustomerDwellTimeAndExitSimulation = (customer: Customer | any) => {
+export const updateCustomerDwellTimeAndExitSimulation = (customer: Customer | any): void => {
   const dwellTime = calculateTotalDwellTime(customer)
 
   customer.dwellTime = dwellTime

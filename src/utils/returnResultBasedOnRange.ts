@@ -1,4 +1,4 @@
-export const returnResultBasedOnRange = (range: number[]) => {
+export const returnResultBasedOnRange = (range: number[]): number => {
   const min = range[0]
   const max = range[1]
 
