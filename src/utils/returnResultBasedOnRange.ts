@@ -1,6 +1,8 @@
 export const returnResultBasedOnRange = (range: number[]): number => {
-  const min = range[0]
-  const max = range[1]
+  const min: number = range[0]
+  const max: number = range[1]
+  const randomNumberFromRange: number = Math.random() * (max - min + 1)
+  const roundedResult: number = Math.floor(randomNumberFromRange) + min
 
-  return Math.floor(Math.random() * (max - min + 1)) + min
+  return roundedResult
 }

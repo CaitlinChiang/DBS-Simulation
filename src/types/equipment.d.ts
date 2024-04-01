@@ -1,8 +1,8 @@
 import { Customer } from '../types/customer'
-import { StationStatus } from '../enums/station'
+import { StationEquipmentStatus } from '../enums/station'
 
 export type Equipment = {
-  status: StationStatus,
-  endTime: number,
+  status: StationEquipmentStatus,
+  endUsageTime: number,
   customer: Customer | null
 }

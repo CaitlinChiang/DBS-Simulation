@@ -1,5 +1,5 @@
+import { Equipment } from '../types/equipment'
 import { Demographic } from '../enums/demographic'
-import { StationEquipmentStatus } from '../enums/station'
 
 export type DemographicAverageDwellTimeInfo = {
   demographic: Demographic
@@ -17,9 +17,5 @@ export type MainQueueLengthAndQueueManagerInfo = {
 
 export type StationManagerInfo = {
   queueLength: number[]
-  equipmentStatus: Array<{
-    status: StationEquipmentStatus
-    customerId: string | null
-    endTime?: number
-  }>
+  equipmentStatus: Array<Equipment>
 }

@@ -3,11 +3,10 @@ import { Equipment } from '../types/equipment'
 import { StationManagerInfo } from '../types/managerInfo'
 import { Station, StationEquipmentAverageUsageTime, StationEquipmentCount, StationEquipmentStatus } from '../enums/station'
 import { calculateTotalStationTime } from '../utils/calculateTime'
-import { modifyInterval } from '../utils/modifyInterval'
 import { modifyAppBoothsEquipmentCount } from '../utils/modifyAppBoothsEquipmentCount'
+import { modifyInterval } from '../utils/modifyInterval'
 import { modifyVTMEquipmentAverageUsageTime } from '../utils/modifyVTMEquipmentAverageUsageTime'
 import { updateCustomerDwellTimeAndExitSimulation } from '../utils/updateCustomerDwellTimeAndExitSimulation'
-import { useStore } from '../store/store'
 
 class StationManager {
   constructor() {
@@ -20,11 +19,11 @@ class StationManager {
     }
 
     this.equipment = {
-      [Station.APP_BOOTHS]: new Array(modifyAppBoothsEquipmentCount(StationEquipmentCount.APP_BOOTHS)).fill(null).map(() => ({ status: StationEquipmentStatus.VACANT, endTime: 0, customer: null })),
-      [Station.COUNTERS]: new Array(StationEquipmentCount.COUNTERS).fill(null).map(() => ({ status: StationEquipmentStatus.VACANT, endTime: 0, customer: null })),
-      [Station.ATMS]: new Array(StationEquipmentCount.ATMS).fill(null).map(() => ({ status: StationEquipmentStatus.VACANT, endTime: 0, customer: null })),
-      [Station.ATM_COINS]: new Array(StationEquipmentCount.ATM_COINS).fill(null).map(() => ({ status: StationEquipmentStatus.VACANT, endTime: 0, customer: null })),
-      [Station.VTMS]: new Array(StationEquipmentCount.VTMS).fill(null).map(() => ({ status: StationEquipmentStatus.VACANT, endTime: 0, customer: null }))
+      [Station.APP_BOOTHS]: new Array(modifyAppBoothsEquipmentCount(StationEquipmentCount.APP_BOOTHS)).fill(null).map(() => ({ status: StationEquipmentStatus.VACANT, endUsageTime: 0, customer: null })),
+      [Station.COUNTERS]: new Array(StationEquipmentCount.COUNTERS).fill(null).map(() => ({ status: StationEquipmentStatus.VACANT, endUsageTime: 0, customer: null })),
+      [Station.ATMS]: new Array(StationEquipmentCount.ATMS).fill(null).map(() => ({ status: StationEquipmentStatus.VACANT, endUsageTime: 0, customer: null })),
+      [Station.ATM_COINS]: new Array(StationEquipmentCount.ATM_COINS).fill(null).map(() => ({ status: StationEquipmentStatus.VACANT, endUsageTime: 0, customer: null })),
+      [Station.VTMS]: new Array(StationEquipmentCount.VTMS).fill(null).map(() => ({ status: StationEquipmentStatus.VACANT, endUsageTime: 0, customer: null }))
     }
   }
 
@@ -35,8 +34,8 @@ class StationManager {
     return Object.entries(this.queues).reduce((info, [station, queue]) => {
       const equipmentStatus = this.equipment[station as Station].map((equipment: Equipment) => ({
         status: equipment.status,
-        customerId: equipment.customer?.id ?? null,
-        endTime: equipment.endTime
+        endUsageTime: equipment.endUsageTime,
+        customer: equipment?.customer,
       }))
       
       const queueLength = station === Station.COUNTERS ? [
@@ -57,7 +56,9 @@ class StationManager {
 
   getStationVacantEquipmentInfo(station: Station): { isEquipmentVacant: boolean, vacantEquipmentIndices: number[] } {
     const vacantEquipmentIndices: number[] = this.equipment[station].reduce((indices: number[], equipment: Equipment, index: number) => {
-      if (equipment.status === StationEquipmentStatus.VACANT) indices.push(index)
+      if (equipment.status === StationEquipmentStatus.VACANT) {
+        indices.push(index)
+      }
       return indices
     }, [])
     const isEquipmentVacant: boolean = vacantEquipmentIndices.length > 0
@@ -67,13 +68,15 @@ class StationManager {
 
   assignCustomerToVacantEquipment(station: Station, vacantEquipmentIndex: number, customer: Customer): void {
     let stationEquipmentAverageUsageTime: number = StationEquipmentAverageUsageTime[station]
-    if (station === Station.VTMS) stationEquipmentAverageUsageTime = modifyVTMEquipmentAverageUsageTime()
+    if (station === Station.VTMS) {
+      stationEquipmentAverageUsageTime = modifyVTMEquipmentAverageUsageTime()
+    }
 
-    const endTime = Date.now() + calculateTotalStationTime(stationEquipmentAverageUsageTime, customer)
+    const endUsageTime = Date.now() + calculateTotalStationTime(stationEquipmentAverageUsageTime, customer)
 
     this.equipment[station][vacantEquipmentIndex] = {
       status: StationEquipmentStatus.OCCUPIED,
-      endTime,
+      endUsageTime,
       customer
     }
   }
@@ -89,14 +92,14 @@ class StationManager {
 
   updateEquipmentStatusToVacant(equipment: Equipment) {
     equipment.status = StationEquipmentStatus.VACANT
-    equipment.endTime = 0
+    equipment.endUsageTime = 0
     equipment.customer = null
   }
 
   updateStationEquipment() {
     Object.entries(this.equipment).forEach(([station, equipments]) => {
       equipments.forEach(equipment => {
-        if (equipment.status === StationEquipmentStatus.OCCUPIED && Date.now() >= equipment.endTime) {
+        if (equipment.status === StationEquipmentStatus.OCCUPIED && Date.now() >= equipment.endUsageTime) {
           updateCustomerDwellTimeAndExitSimulation(equipment.customer)
           this.updateEquipmentStatusToVacant(equipment)
         }

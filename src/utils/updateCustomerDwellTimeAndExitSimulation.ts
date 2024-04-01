@@ -4,7 +4,7 @@ import { demographicAverageDwellTimeManager } from './demographicAverageDwellTim
 import { calculateTotalDwellTime } from './calculateTime'
 
 export const updateCustomerDwellTimeAndExitSimulation = (customer: Customer | any): void => {
-  const dwellTime = calculateTotalDwellTime(customer)
+  const dwellTime: number = calculateTotalDwellTime(customer)
 
   customer.dwellTime = dwellTime
   customer.state = State.EXIT

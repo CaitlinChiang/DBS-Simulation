@@ -1,26 +1,26 @@
 export const returnResultBasedOnDist = (distribution: number[]): number => {
-  const mean = distribution.reduce((acc, val) => acc + val, 0) / distribution.length    
-  const standardDeviation = Math.sqrt(distribution.reduce((acc, val) => acc + Math.pow(val - mean, 2), 0) / distribution.length)
+  const mean: number = distribution.reduce((acc, val) => acc + val, 0) / distribution.length    
+  const standardDeviation: number = Math.sqrt(distribution.reduce((acc, val) => acc + Math.pow(val - mean, 2), 0) / distribution.length)
   
-  // Assign a probability to each number based on its distance from the mean
-  const probabilities = distribution.map(num => {
+  // ASSIGN A PROBABILITY TO EACH NUMBER BASED ON ITS DISTANCE FROM THE MEAN
+  const probabilities: number[] = distribution.map(num => {
     const distanceFromMean = Math.abs(num - mean)
     return Math.exp(-Math.pow(distanceFromMean / standardDeviation, 2))
   })
   
-  // Normalize probabilities to sum up to 1
-  const totalProbability = probabilities.reduce((acc, val) => acc + val, 0)
-  const normalizedProbabilities = probabilities.map(prob => prob / totalProbability)
+  // NORMALIZE PROBABILITIES TO SUM UP TO 1
+  const totalProbability: number = probabilities.reduce((acc, val) => acc + val, 0)
+  const normalizedProbabilities: number[] = probabilities.map(prob => prob / totalProbability)
   
-  // Select a random number based on the assigned probabilities
-  const randomNum = Math.random()
-  let sum = 0
+  // SELECT A RANDOM NUMBER BASED ON THE ASSIGNED PROBABILITIES
+  const randomNum: number = Math.random()
+  let sum: number = 0
 
   for (let i = 0; i < normalizedProbabilities.length; i++) {
     sum += normalizedProbabilities[i]
     if (randomNum < sum) return distribution[i]
   }
   
-  // Fallback to the last number in case of rounding errors
+  // FALLBACK TO THE LAST NUMBER IN CASE OF ROUNDING ERRORS
   return distribution[distribution.length - 1]
 }

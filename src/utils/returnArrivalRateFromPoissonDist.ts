@@ -1,5 +1,5 @@
 import { SolutionChoice } from '../enums/solutionChoice'
-import { useStore } from '../store/store'
+import { useStore } from '../store'
 
 const returnNormalDistribution = (x: number, mu: number, sigma: number): number => {
   return (1 / (sigma * Math.sqrt(2 * Math.PI))) * Math.exp(-((x - mu) ** 2) / (2 * sigma ** 2));
@@ -23,10 +23,10 @@ export const returnArrivalRateBasedFromPoissonDist = (hour: number): number => {
   const mu = 15 // peak hour as in 3 o'clock
   const sigma = 4 // standard deviation
 
-  const peakValue = returnNormalDistribution(mu, mu, sigma)
-  const scaleFactor = peakRate / peakValue
-  const rate = returnNormalDistribution(hour, mu, sigma) * scaleFactor
-  const modifiedRate = modifyArrivalRate(rate)
+  const peakValue: number = returnNormalDistribution(mu, mu, sigma)
+  const scaleFactor: number = peakRate / peakValue
+  const rate: number = returnNormalDistribution(hour, mu, sigma) * scaleFactor
+  const modifiedRate: number = modifyArrivalRate(rate)
 
   return modifiedRate
 }
