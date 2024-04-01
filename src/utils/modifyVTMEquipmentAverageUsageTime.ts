@@ -1,9 +1,9 @@
 import { StationEquipmentAverageUsageTime } from '../enums/station'
 import { SolutionChoice } from '../enums/solutionChoice'
-import { useGlobal } from '../hooks/useGlobal'
+import { useStore } from '../store/store'
 
 export const modifyVTMEquipmentAverageUsageTime = (): number => {
-  const { solutionChoice } = useGlobal()
+  const { solutionChoice } = useStore.getState()
 
   if (solutionChoice === SolutionChoice.VTM_VERIFICATION_REMOVAL) return 201
   return StationEquipmentAverageUsageTime.VTMS

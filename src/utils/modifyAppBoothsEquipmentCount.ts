@@ -1,8 +1,8 @@
 import { SolutionChoice } from '../enums/solutionChoice'
-import { useGlobal } from '../hooks/useGlobal'
+import { useStore } from '../store/store'
 
 export const modifyAppBoothsEquipmentCount = (equipmentCount: number): number => {
-  const { solutionChoice } = useGlobal()
+  const solutionChoice = useStore.getState().solutionChoice
 
   if (solutionChoice === SolutionChoice.VTM_VERIFICATION_REMOVAL) return equipmentCount + 1
   return equipmentCount

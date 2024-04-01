@@ -1,12 +1,12 @@
 import { SolutionChoice } from '../enums/solutionChoice'
-import { useGlobal } from '../hooks/useGlobal'
+import { useStore } from '../store/store'
 
 const returnNormalDistribution = (x: number, mu: number, sigma: number): number => {
   return (1 / (sigma * Math.sqrt(2 * Math.PI))) * Math.exp(-((x - mu) ** 2) / (2 * sigma ** 2));
 }
 
 const modifyArrivalRate = (arrivalRate: number): number => {
-  const { solutionChoice } = useGlobal()
+  const { solutionChoice } = useStore.getState()
 
   switch (solutionChoice) {
     case SolutionChoice.SHARED_DATABASE:

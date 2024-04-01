@@ -3,6 +3,6 @@ import { StationStatus } from '../enums/station'
 
 export type Equipment = {
   status: StationStatus,
-  countdown: number,
+  endTime: number,
   customer: Customer | null
 }

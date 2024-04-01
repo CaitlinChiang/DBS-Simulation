@@ -4,6 +4,7 @@ import { RETURN_LATER_QN_RANGE } from '../enums/ranges'
 import { modifyInterval } from '../utils/modifyInterval'
 import { returnResultBasedOnRange } from '../utils/returnResultBasedOnRange'
 import { mainQueueManager } from './mainQueueManager'
+import { useStore } from '../store/store'
 
 class ReturnLaterQueueAgainManager {
   constructor() {}
@@ -15,9 +16,12 @@ class ReturnLaterQueueAgainManager {
   }
 
   appendCustomerToReturnLaterQueueAgainQueue(customer: Customer): void {
+    const { speedMultiplier } = useStore.getState()
+
     customer.state = State.RETURN_LATER_QA
 
-    const delay = returnResultBasedOnRange(RETURN_LATER_QN_RANGE)
+    const adjustedDelayRange = RETURN_LATER_QN_RANGE.map(time => Math.round(time * 1000 / speedMultiplier))
+    const delay = returnResultBasedOnRange(adjustedDelayRange)
     customer.qaDelayTime = Date.now() + delay
 
     this.returnLaterQueueAgainQueue.push(customer)
@@ -41,7 +45,7 @@ class ReturnLaterQueueAgainManager {
   startSubsystemSimulation() {
     const intervalId = setInterval(() => {
       this.processCustomersFromReturnLaterQueueAgainQueue()
-    }, modifyInterval(1000))
+    }, modifyInterval(1))
   
     return () => clearInterval(intervalId)
   }

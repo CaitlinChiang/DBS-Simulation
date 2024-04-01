@@ -1,10 +1,10 @@
-import Layout from './components/main'
+import Main from './components/main'
 import './App.css'
 
 function App() {
   return (
     <>
-      <Layout />
+      <Main />
     </>
   )
 }

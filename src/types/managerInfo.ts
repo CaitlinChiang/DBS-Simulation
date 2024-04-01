@@ -11,8 +11,8 @@ export type MainQueueLengthAndQueueManagerInfo = {
   isQueueManagerAvailable?: boolean
   isQueueManagerDiscussing?: boolean
   isQueueManagerAssisting?: boolean
-  queueManagerDiscussionTimer?: number
-  queueManagerAssistanceTimer?: number  
+  queueManagerDiscussionEndTime?: number
+  queueManagerAssistanceEndTime?: number  
 }
 
 export type StationManagerInfo = {
@@ -20,6 +20,6 @@ export type StationManagerInfo = {
   equipmentStatus: Array<{
     status: StationEquipmentStatus
     customerId: string | null
-    countdown?: number
+    endTime?: number
   }>
 }

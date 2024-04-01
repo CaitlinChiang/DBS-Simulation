@@ -7,6 +7,7 @@ import { modifyInterval } from '../utils/modifyInterval'
 import { modifyAppBoothsEquipmentCount } from '../utils/modifyAppBoothsEquipmentCount'
 import { modifyVTMEquipmentAverageUsageTime } from '../utils/modifyVTMEquipmentAverageUsageTime'
 import { updateCustomerDwellTimeAndExitSimulation } from '../utils/updateCustomerDwellTimeAndExitSimulation'
+import { useStore } from '../store/store'
 
 class StationManager {
   constructor() {
@@ -19,11 +20,11 @@ class StationManager {
     }
 
     this.equipment = {
-      [Station.APP_BOOTHS]: new Array(modifyAppBoothsEquipmentCount(StationEquipmentCount.APP_BOOTHS)).fill(null).map(() => ({ status: StationEquipmentStatus.VACANT, countdown: 0, customer: null })),
-      [Station.COUNTERS]: new Array(StationEquipmentCount.COUNTERS).fill(null).map(() => ({ status: StationEquipmentStatus.VACANT, countdown: 0, customer: null })),
-      [Station.ATMS]: new Array(StationEquipmentCount.ATMS).fill(null).map(() => ({ status: StationEquipmentStatus.VACANT, countdown: 0, customer: null })),
-      [Station.ATM_COINS]: new Array(StationEquipmentCount.ATM_COINS).fill(null).map(() => ({ status: StationEquipmentStatus.VACANT, countdown: 0, customer: null })),
-      [Station.VTMS]: new Array(StationEquipmentCount.VTMS).fill(null).map(() => ({ status: StationEquipmentStatus.VACANT, countdown: 0, customer: null }))
+      [Station.APP_BOOTHS]: new Array(modifyAppBoothsEquipmentCount(StationEquipmentCount.APP_BOOTHS)).fill(null).map(() => ({ status: StationEquipmentStatus.VACANT, endTime: 0, customer: null })),
+      [Station.COUNTERS]: new Array(StationEquipmentCount.COUNTERS).fill(null).map(() => ({ status: StationEquipmentStatus.VACANT, endTime: 0, customer: null })),
+      [Station.ATMS]: new Array(StationEquipmentCount.ATMS).fill(null).map(() => ({ status: StationEquipmentStatus.VACANT, endTime: 0, customer: null })),
+      [Station.ATM_COINS]: new Array(StationEquipmentCount.ATM_COINS).fill(null).map(() => ({ status: StationEquipmentStatus.VACANT, endTime: 0, customer: null })),
+      [Station.VTMS]: new Array(StationEquipmentCount.VTMS).fill(null).map(() => ({ status: StationEquipmentStatus.VACANT, endTime: 0, customer: null }))
     }
   }
 
@@ -35,7 +36,7 @@ class StationManager {
       const equipmentStatus = this.equipment[station as Station].map((equipment: Equipment) => ({
         status: equipment.status,
         customerId: equipment.customer?.id ?? null,
-        countdown: equipment.countdown
+        endTime: equipment.endTime
       }))
       
       const queueLength = station === Station.COUNTERS ? [
@@ -68,9 +69,11 @@ class StationManager {
     let stationEquipmentAverageUsageTime: number = StationEquipmentAverageUsageTime[station]
     if (station === Station.VTMS) stationEquipmentAverageUsageTime = modifyVTMEquipmentAverageUsageTime()
 
+    const endTime = Date.now() + calculateTotalStationTime(stationEquipmentAverageUsageTime, customer)
+
     this.equipment[station][vacantEquipmentIndex] = {
       status: StationEquipmentStatus.OCCUPIED,
-      countdown: calculateTotalStationTime(stationEquipmentAverageUsageTime, customer),
+      endTime,
       customer
     }
   }
@@ -86,20 +89,16 @@ class StationManager {
 
   updateEquipmentStatusToVacant(equipment: Equipment) {
     equipment.status = StationEquipmentStatus.VACANT
-    equipment.countdown = 0
+    equipment.endTime = 0
     equipment.customer = null
   }
 
   updateStationEquipment() {
     Object.entries(this.equipment).forEach(([station, equipments]) => {
       equipments.forEach(equipment => {
-        if (equipment.status === StationEquipmentStatus.OCCUPIED && equipment.countdown > 0) {
-          equipment.countdown--
-
-          if (equipment.countdown === 0) {
-            updateCustomerDwellTimeAndExitSimulation(equipment.customer)
-            this.updateEquipmentStatusToVacant(equipment)
-          }
+        if (equipment.status === StationEquipmentStatus.OCCUPIED && Date.now() >= equipment.endTime) {
+          updateCustomerDwellTimeAndExitSimulation(equipment.customer)
+          this.updateEquipmentStatusToVacant(equipment)
         }
       })
 
@@ -110,7 +109,7 @@ class StationManager {
   startSubsystemSimulation() {
     const intervalId = setInterval(() => {
       this.updateStationEquipment()
-    }, modifyInterval(1000))
+    }, modifyInterval(1))
   
     return () => clearInterval(intervalId)
   }

@@ -2,10 +2,10 @@ import { State, EventState } from '../enums/states'
 import { StateFromQueueManagerDiscussionProb, StateFromQueueManagerDiscussionProbSolutionStaffEducation, StateFromQueueManagerDiscussionProbSolutionErrorPrevention } from '../enums/probabilities'
 import { SolutionChoice } from '../enums/solutionChoice'
 import { returnResultBasedOnProb } from './returnResultBasedOnProb'
-import { useGlobal } from '../hooks/useGlobal'
+import { useStore } from '../store/store'
 
 export const returnAppropriateStateForQueueManagerDiscussionProb = (): State | EventState => {
-  const { solutionChoice } = useGlobal()
+  const { solutionChoice } = useStore.getState()
 
   switch (solutionChoice) {
     case SolutionChoice.STAFF_EDUCATION:
