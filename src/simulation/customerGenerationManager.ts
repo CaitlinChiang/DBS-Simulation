@@ -10,7 +10,7 @@ import { returnLaterQueueNumberManager } from './returnLaterQueueNumberManager'
 import { stationManager } from './stationManager'
 
 class CustomerGenerationManager {
-  constructor() {}
+  private intervalId?: number
 
   private randomizeDemographic(): Demographic {
     return returnResultBasedOnProb(DemographicArrivalProb)
@@ -31,15 +31,6 @@ class CustomerGenerationManager {
     return newCustomer
   }
 
-  generateCustomerFromArrivalRate(arrivalRate: number): void {
-    const intervalInSeconds: number = 1 / arrivalRate
-
-    setInterval(() => {
-      const customer: Customer = this.generateCustomer()
-      this.appendCustomerToArrivalStateQueue(customer)
-    }, modifyInterval(intervalInSeconds))
-  }
-
   appendCustomerToArrivalStateQueue = (customer: Customer): void => {
     switch (customer.state) {
       case State.MAIN_QUEUE:
@@ -58,6 +49,17 @@ class CustomerGenerationManager {
         returnLaterQueueNumberManager.appendCustomerToReturnLaterQueueNumberQueue(customer)
         break
     }
+  }
+
+  generateCustomerFromArrivalRate(arrivalRate: number): void {
+    const intervalInSeconds: number = 1 / arrivalRate
+
+    if (this.intervalId) clearInterval(this.intervalId) // PREVENT DUPLICATE CUSTOMER GENERATION
+
+    this.intervalId = setInterval(() => {
+      const customer: Customer = this.generateCustomer()
+      this.appendCustomerToArrivalStateQueue(customer)
+    }, modifyInterval(intervalInSeconds))
   }
 }
 

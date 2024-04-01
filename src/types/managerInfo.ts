@@ -9,8 +9,6 @@ export type DemographicAverageDwellTimeInfo = {
 export type MainQueueLengthAndQueueManagerInfo = {
   mainQueueLength?: number
   isQueueManagerAvailable?: boolean
-  isQueueManagerDiscussing?: boolean
-  isQueueManagerAssisting?: boolean
   queueManagerDiscussionEndTime?: number
   queueManagerAssistanceEndTime?: number  
 }
