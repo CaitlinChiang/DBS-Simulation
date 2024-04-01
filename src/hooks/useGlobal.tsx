@@ -6,7 +6,7 @@ const GlobalContext = createContext<GlobalContextType | undefined>(undefined)
 
 export const GlobalProvider = ({ children }: { children: ReactNode }) => {
   const [solutionChoice, setSolutionChoice] = useState<SolutionChoice>(SolutionChoice.NONE)
-  const [speedMultiplier, setSpeedMultiplier] = useState(1)
+  const [speedMultiplier, setSpeedMultiplier] = useState<number>(1)
 
   return (
     <GlobalContext.Provider value={{ solutionChoice, setSolutionChoice, speedMultiplier, setSpeedMultiplier }}>
