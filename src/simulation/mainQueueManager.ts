@@ -25,8 +25,6 @@ class MainQueueManager {
     return {
       mainQueueLength: this.mainQueue.length,
       isQueueManagerAvailable: this.isQueueManagerAvailable,
-      isQueueManagerDiscussing: this.queueManagerDiscussionEndTime > 0,
-      isQueueManagerAssisting: this.queueManagerAssistanceEndTime > 0,
       queueManagerDiscussionEndTime: this.queueManagerDiscussionEndTime,
       queueManagerAssistanceEndTime: this.queueManagerAssistanceEndTime,
     }
@@ -43,7 +41,6 @@ class MainQueueManager {
       case State.QUEUE_MANAGER_DISCUSSION:
         customer.state = State.QUEUE_MANAGER_DISCUSSION
         this.mainQueue.push(customer)
-        this.handleQueueManagerDiscussion()
         break
       case State.EXIT:
         updateCustomerDwellTimeAndExitSimulation(customer)
@@ -53,12 +50,7 @@ class MainQueueManager {
 
   async updateQueueManagerInfo(): Promise<void> {
     const isQueueManagerAvailable: boolean = this.queueManagerDiscussionEndTime === 0 && this.queueManagerAssistanceEndTime === 0
-
-    if (isQueueManagerAvailable) {
-      this.isQueueManagerAvailable = true
-    } else {
-      this.isQueueManagerAvailable = false
-    }
+    this.isQueueManagerAvailable = isQueueManagerAvailable
   }
 
   async isSystemAbleToProcessNextCustomer(): Promise<boolean> {
@@ -74,30 +66,20 @@ class MainQueueManager {
   }
 
   async waitForDiscussionEndTime(): Promise<void> {
-    return new Promise(resolve => {
+    const promise = new Promise<void>(resolve => {
       const checkTimeInterval = setInterval(() => {
         if (Date.now() >= this.queueManagerDiscussionEndTime) {
           clearInterval(checkTimeInterval)
-          
           resolve()
         }
       }, modifyInterval(1000))
     })
+    return promise
   }
 
   async handleQueueManagerDiscussion(): Promise<void> {
     const isSystemAbleToProcessNextCustomer: boolean = await this.isSystemAbleToProcessNextCustomer()
     if (!isSystemAbleToProcessNextCustomer) return
-
-    console.log({
-      from: 'after system check',
-      mainQueueLength: this.mainQueue.length,
-      isQueueManagerAvailable: this.isQueueManagerAvailable,
-      isQueueManagerDiscussing: this.queueManagerDiscussionEndTime > 0,
-      isQueueManagerAssisting: this.queueManagerAssistanceEndTime > 0,
-      queueManagerDiscussionEndTime: this.queueManagerDiscussionEndTime,
-      queueManagerAssistanceEndTime: this.queueManagerAssistanceEndTime
-    })
 
     const queueManagerActionFromDiscussion: State | EventState = returnAppropriateStateForQueueManagerDiscussionProb()
     const customerToProcess: Customer | any = this.mainQueue.shift()
@@ -105,16 +87,6 @@ class MainQueueManager {
     await this.setDiscussionEndTimeForQueueManager(customerToProcess)
     await this.waitForDiscussionEndTime()
     this.queueManagerDiscussionEndTime = 0
-
-    console.log({
-      from: 'after discussion check',
-      mainQueueLength: this.mainQueue.length,
-      isQueueManagerAvailable: this.isQueueManagerAvailable,
-      isQueueManagerDiscussing: this.queueManagerDiscussionEndTime > 0,
-      isQueueManagerAssisting: this.queueManagerAssistanceEndTime > 0,
-      queueManagerDiscussionEndTime: this.queueManagerDiscussionEndTime,
-      queueManagerAssistanceEndTime: this.queueManagerAssistanceEndTime
-    })
 
     switch (queueManagerActionFromDiscussion) {
       case EventState.QUEUE_MANAGER_DIRECTS:
@@ -126,7 +98,7 @@ class MainQueueManager {
       case EventState.CUSTOMER_MISSING_DOCUMENTS:
         this.handleCustomerMissingDocuments(customerToProcess)
         break
-      case State.EXIT: // Solves Customer Issue Successfully
+      case State.EXIT: // SOLVES CUSTOMER ISSUE SUCCESSFULLY
         updateCustomerDwellTimeAndExitSimulation(customerToProcess)
         break
     }
@@ -138,7 +110,7 @@ class MainQueueManager {
   }
 
   async waitForAssistanceEndTime(): Promise<void> {
-    return new Promise(resolve => {
+    const promise = new Promise<void>(resolve => {
       const checkTimeInterval = setInterval(() => {
         if (Date.now() >= this.queueManagerAssistanceEndTime) {
           clearInterval(checkTimeInterval)
@@ -146,6 +118,7 @@ class MainQueueManager {
         }
       }, modifyInterval(1000))
     })
+    return promise
   }
 
   async handleQueueMangerRequiresAssistance(customer: Customer): Promise<void> {
@@ -159,7 +132,7 @@ class MainQueueManager {
       case EventState.QUEUE_MANAGER_DIRECTS:
         this.handleQueueManagerDirectsToStation(customer)
         break
-      case State.EXIT: // Solves Customer Issue Successfully
+      case State.EXIT: // SOLVES CUSTOMER ISSUE SUCCESSFULLY
         updateCustomerDwellTimeAndExitSimulation(customer)
         break
     }
@@ -183,28 +156,16 @@ class MainQueueManager {
     }
   }
 
-  // startSubsystemSimulation() {
-  //   const intervalId = setInterval(() => {
-  //     this.handleQueueManagerDiscussion()
-  //   }, modifyInterval(1))
-  
-  //   return () => clearInterval(intervalId)
-  // }
+  async startSubsystemSimulation() {
+    while (true) {
+      await this.updateQueueManagerInfo()
 
-  startSubsystemSimulation() {
-    let keepRunning = true;
-  
-    const run = async () => {
-      while (keepRunning) {
+      if (this.mainQueue.length > 0 && this.isQueueManagerAvailable) {
         await this.handleQueueManagerDiscussion()
-        await new Promise(resolve => setTimeout(resolve, modifyInterval(100)));
+      } else {
+        await new Promise(resolve => setTimeout(resolve, 1000))
       }
-    };
-  
-    run(); // Start the loop immediately
-  
-    // Return a function to stop the simulation
-    return () => { keepRunning = false; };
+    }
   }
 }
 
