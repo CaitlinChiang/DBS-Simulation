@@ -10,28 +10,36 @@ import { modifyInterval } from '../../utils/modifyInterval'
 import { returnArrivalRateBasedFromPoissonDist } from '../../utils/returnArrivalRateFromPoissonDist'
 import { customerGenerationManager } from '../../simulation/customerGenerationManager'
 import { mainQueueManager } from '../../simulation/mainQueueManager'
-import { returnLaterQueueAgainManager } from '../../simulation/returnLaterQueueAgainManager'
 import { stationManager } from '../../simulation/stationManager'
-import { useStore } from '../../store/store'
+import { returnLaterQueueAgainManager } from '../../simulation/returnLaterQueueAgainManager'
+import { useStore } from '../../store'
 
 const Main = (): ReactElement => {
-  const {
-    solutionChoice,
-    setSolutionChoice,
-    speedMultiplier,
-    setSpeedMultiplier
-  } = useStore.getState()
+  const { solutionChoice, speedMultiplier } = useStore.getState()
 
-  const [simulationHour, setSimulationHour] = useState(8)
+  const [simulationHour, setSimulationHour] = useState(10)
   const [arrivalRate, setArrivalRate] = useState<number>(0)
-  const [startSimulation, setStartSimulation] = useState(true)
+  const [startSimulation, setStartSimulation] = useState(false)
 
   const [demographicAverageDwellTimeInfo, setDemographicAverageDwellTimeInfo] = useState<DemographicAverageDwellTimeInfo[]>([])
   const [mainQueueInfo, setMainQueueInfo] = useState<MainQueueLengthAndQueueManagerInfo>({})
   const [stationInfo, setStationInfo] = useState<Record<string, StationManagerInfo>>()
   const [returnLaterQueueAgainInfo, setReturnLaterQueueAgainInfo] = useState<number>(0)
+  
+  // RESET SIMULATION WHEN PARAMETERS OF SOLUTION CHOICE AND ARRIVAL RATE CHANGES
+  useEffect(() => {
+    if (!startSimulation) return
 
-  // Time Simulation
+    resetSimulation();
+    setTimeout(() => setStartSimulation(true), 100)
+  }, [solutionChoice, arrivalRate, speedMultiplier])
+
+  const resetSimulation = () => {
+    setStartSimulation(false)
+    setSimulationHour(10)
+  }
+
+  // TIME SIMULATION
   useEffect(() => {
     if (startSimulation) {
       const interval = setInterval(() => {
@@ -46,25 +54,25 @@ const Main = (): ReactElement => {
     }
   }, [startSimulation, speedMultiplier])
 
+  // GENERATION OF CUSTOMERS
   useEffect(() => {
-    const defaultArrivalRate = 0.012 // TODO: returnArrivalRateBasedFromPoissonDist(simulationHour)
+    const defaultArrivalRate = returnArrivalRateBasedFromPoissonDist(simulationHour)
     setArrivalRate(defaultArrivalRate)
+  }, [])
 
-    if (startSimulation) customerGenerationManager.generateCustomerFromArrivalRate(arrivalRate)
-  }, [simulationHour, startSimulation, arrivalRate])
+  useEffect(() => {
+    if (startSimulation) {
+      customerGenerationManager.generateCustomerFromArrivalRate(arrivalRate)
+    }
+  }, [startSimulation, simulationHour])
 
+  // ACTIVATE SUBSYSTEMS
+  stationManager.startSubsystemSimulation()
   mainQueueManager.startSubsystemSimulation()
   returnLaterQueueAgainManager.startSubsystemSimulation()
-  stationManager.startSubsystemSimulation()
 
-
-  // Main Simulation Loops
+  // FETCH INFORMATION FOR INTERFACE DISPLAY
   useEffect(() => {
-    // const mainQueueSubsystem = mainQueueManager.startSubsystemSimulation()
-    // const returnLaterQueueAgainSubsystem = returnLaterQueueAgainManager.startSubsystemSimulation()
-    // const stationSubsystem = stationManager.startSubsystemSimulation()
-
-    
     const fetchInformation = () => {
       const demographicAverageDwellTimeInfo: DemographicAverageDwellTimeInfo[] = demographicAverageDwellTimeManager.getDemographicAverageDwellTimeInfo()
       setDemographicAverageDwellTimeInfo(demographicAverageDwellTimeInfo)
@@ -80,13 +88,7 @@ const Main = (): ReactElement => {
     }
 
     const intervalId = setInterval(fetchInformation, modifyInterval(1))
-
-    return () => {
-      clearInterval(intervalId)
-      // mainQueueSubsystem()
-      // returnLaterQueueAgainSubsystem()
-      // stationSubsystem()
-    }
+    return () => clearInterval(intervalId)
   }, [])
 
   return (
@@ -97,6 +99,8 @@ const Main = (): ReactElement => {
         <h3 className='simulation-settings'>Simulation Settings</h3>
 
         <h4>Simulation Hour: {simulationHour}</h4>
+        <h4>Current Date Time: {(new Date()).toISOString()}</h4>
+        <br />
 
         <div className='simulation-settings-item'>
           <label htmlFor='simulationSpeed'>Simulation Speed</label>
@@ -104,7 +108,7 @@ const Main = (): ReactElement => {
             id="speedMultiplier"
             type="number"
             value={speedMultiplier}
-            onChange={(e) => setSpeedMultiplier(Number(e.target.value))}
+            onChange={(e) => useStore.getState().setSpeedMultiplier(Number(e.target.value))}
             min="1"
             max="100"
           />
@@ -134,7 +138,7 @@ const Main = (): ReactElement => {
                 type="radio"
                 value="SharedDatabase"
                 checked={solutionChoice === SolutionChoice.SHARED_DATABASE}
-                onChange={() => setSolutionChoice(SolutionChoice.SHARED_DATABASE)}
+                onChange={() => useStore.getState().setSolutionChoice(SolutionChoice.SHARED_DATABASE)}
               />
               Shared Database
             </label>
@@ -144,7 +148,7 @@ const Main = (): ReactElement => {
                 type="radio"
                 value="EducationForStaff"
                 checked={solutionChoice === SolutionChoice.STAFF_EDUCATION}
-                onChange={() => setSolutionChoice(SolutionChoice.STAFF_EDUCATION)}
+                onChange={() => useStore.getState().setSolutionChoice(SolutionChoice.STAFF_EDUCATION)}
               />
               Education for Staff
             </label>
@@ -154,7 +158,7 @@ const Main = (): ReactElement => {
                 type="radio"
                 value="RemovalOf2ndVTMVerification"
                 checked={solutionChoice === SolutionChoice.VTM_VERIFICATION_REMOVAL}
-                onChange={() => setSolutionChoice(SolutionChoice.VTM_VERIFICATION_REMOVAL)}
+                onChange={() => useStore.getState().setSolutionChoice(SolutionChoice.VTM_VERIFICATION_REMOVAL)}
               />
               Removal of 2nd VTM Verification
             </label>
@@ -164,7 +168,7 @@ const Main = (): ReactElement => {
                 type="radio"
                 value="MethodsForErrorPrevention"
                 checked={solutionChoice === SolutionChoice.ERROR_PREVENTION}
-                onChange={() => setSolutionChoice(SolutionChoice.ERROR_PREVENTION)}
+                onChange={() => useStore.getState().setSolutionChoice(SolutionChoice.ERROR_PREVENTION)}
               />
               Methods for Error Prevention
             </label>
@@ -187,28 +191,60 @@ const Main = (): ReactElement => {
 
       <div className='content'>
         <Floorplan />
-        
+      </div>
+
+      <div className='simulationInformation'>
+        <div className="dividerSpace" />
+        <div className="divider" />
+
+        <h1>Simulation Information</h1>
+
         <div>
-          <h1>DATE NOW: {Date.now()}</h1>
+          <h2>Demographic Average Dwell Times</h2>
+
+          {demographicAverageDwellTimeInfo.map((info) => {
+            return (
+              <div key={info.demographic}>
+                <p className='stationInfo'>Demographic: {info.demographic} - Average Dwell Time: {info.averageDwellTime.toFixed(2)}s</p>
+              </div>
+            )
+          })}
+        </div>
+
+        <div className='mainQueueSectionInfo'>
+          <h2>Main Queue & Queue Manager</h2>
+
+          <p className='stationInfo'>Main Queue Length: {mainQueueInfo.mainQueueLength}</p>
+          <p className='stationInfo'>Manager in Discussion EndTime: {mainQueueInfo.queueManagerDiscussionEndTime}</p>
+          <p className='stationInfo'>Manager in Assistance EndTime: { mainQueueInfo.queueManagerAssistanceEndTime}</p>
+        </div>
+
+        <div className='homeSectionInfo'>
+          <h2>Customers Coming Back Later</h2>
+          <p className='stationInfo'>Number Returning: {returnLaterQueueAgainInfo}</p>
+        </div>
+        
+        <div className='stationSectionInfo'>
+          <h2>Station & Equipment Information</h2>
+          
           {Object.entries(stationInfo || {}).map(([station, info]) => {
             return (
-              <div key={station}>
-                <h2>Station: {station}</h2>
+              <div key={station} className='stationEquipmentInfo'>
+                <h3>Station: {station}</h3>
                 {station !== Station.COUNTERS && (
-                  <p>Queue Length: {info.queueLength[0]}</p>
+                  <p className='stationInfo'>Queue Length: {info.queueLength[0]}</p>
                 )}
                 {station === Station.COUNTERS && (
                   <div>
-                    <p>Queue Length for Digital Queue: {info.queueLength[0]}</p>
-                    <p>Queue Length for Physical Queue: {info.queueLength[1]}</p>
+                    <p className='stationInfo'>Queue Length for Digital Queue: {info.queueLength[0]}</p>
+                    <p className='stationInfo'>Queue Length for Physical Queue: {info.queueLength[1]}</p>
                   </div>
                 )}
                 <div>
-                  Equipment Status:
-                  <ul>
+                  <ul className="no-bullets">
                     {info.equipmentStatus.map((equipment, index) => (
                       <li key={index}>
-                        {equipment.status} with endtime {equipment?.endTime} : {equipment?.customerId ? `by Customer ${equipment?.customerId}` : ''}
+                        Equipment {index + 1}: {equipment.status} with end usage time of {equipment?.endUsageTime} : {equipment?.customer ? `by Customer ${equipment?.customer?.id}` : ''}
                       </li>
                     ))}
                   </ul>
@@ -217,32 +253,6 @@ const Main = (): ReactElement => {
             )
           })}
         </div>
-
-        <div>
-        {demographicAverageDwellTimeInfo.map((info) => {
-          return (
-            <div key={info.demographic}>
-              <h2>Demographic: {info.demographic}</h2>
-              <p>Average Dwell Time: {info.averageDwellTime}</p>
-            </div>
-          )
-          })}
-        </div>
-        
-        <div>
-          MAIN QUEUE LENGTH: {mainQueueInfo.mainQueueLength}
-          <br />
-          MANAGER DISCUSSION TIMER: {mainQueueInfo.queueManagerDiscussionEndTime}
-          <br />
-          MANAGER IN DISCUSSION?: { mainQueueInfo.isQueueManagerDiscussing ? 'Yes' : 'No'}`
-          <br />
-          MANAGER ASSISTANCE TIMER: { mainQueueInfo.queueManagerAssistanceEndTime}
-          <br />
-          MANAGER IN ASSISTANCE?: { mainQueueInfo.isQueueManagerAssisting ? 'Yes' : 'No'}
-          <br />
-        </div>
-
-        <h1>QUEUE AGAIN FROM HOME COUNT: {returnLaterQueueAgainInfo}</h1>
       </div>
     </div>
   )

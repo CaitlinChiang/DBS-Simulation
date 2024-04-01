@@ -26,3 +26,41 @@
   margin-left: 250px;
   min-height: 95vh;
 }
+
+.simulationInformation {
+  margin-left: 250px;
+}
+
+.dividerSpace {
+  height: 200px;
+}
+
+.divider {
+  height: 1px;
+  background-color: #444444;
+  width: 100%;
+}
+
+.stationInfo {
+  font-size: 18px;
+}
+
+.stationSectionInfo {
+  padding-top: 50px;
+}
+
+.stationEquipmentInfo {
+  padding-top: 20px;
+}
+
+.mainQueueSectionInfo {
+  padding-top: 20px;
+}
+
+.homeSectionInfo {
+  padding-top: 20px;
+}
+
+.no-bullets {
+  list-style-type: none;
+}
