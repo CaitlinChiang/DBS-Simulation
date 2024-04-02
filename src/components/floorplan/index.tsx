@@ -7,7 +7,7 @@ import { Customer } from '../../types/customer'
 
 const Floorplan = (): ReactElement => {
   const [startSimulation, setStartSimulation] = useState<boolean>(false)
-  const [customerArrivalRate, setCustomerArrivalRate] = useState<number>(3000)
+  const [customerArrivalRate, setCustomerArrivalRatew] = useState<number>(3000)
   
   // Arriving Customers to Main Queue
   const [arrivingCustomers, setArrivingCustomers] = useState<Customer[]>([])
