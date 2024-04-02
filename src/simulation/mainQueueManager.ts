@@ -28,6 +28,13 @@ class MainQueueManager {
     }
   }
 
+  resetMainQueueManager(): void {
+    this.mainQueue = []
+    this.isQueueManagerAvailable = true
+    this.queueManagerDiscussionEndTime = 0
+    this.queueManagerAssistanceEndTime = 0
+  }
+
   appendCustomerToMainQueue(customer: Customer): void {
     this.handleCustomerActionFromStartOfMainQueue(customer)
   }

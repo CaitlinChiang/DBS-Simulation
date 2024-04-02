@@ -16,20 +16,18 @@ class CustomerGenerationManager {
     return returnResultBasedOnProb(DemographicArrivalProb)
   }
 
-  private randomizeStateFromArrival(simulationHour: number): State {
-    const isOpeningHours: boolean = simulationHour >= 10 && simulationHour <= 18
-    
+  private randomizeStateFromArrival(isOpeningHours: boolean): State {    
     if (isOpeningHours) {
       return returnResultBasedOnProb(StateFromArrivalOpeningHoursProb)
     }
     return returnResultBasedOnProb(StateFromArrivalClosingHoursProb)
   }
 
-  generateCustomer(simulationHour: number): Customer {
+  generateCustomer(isOpeningHours: boolean): Customer {
     const newCustomer: Customer = {
       id: (new Date()).toISOString(),
       demographic: this.randomizeDemographic(),
-      state: this.randomizeStateFromArrival(simulationHour),
+      state: this.randomizeStateFromArrival(isOpeningHours),
       dwellTime: 0
     }
 
@@ -56,13 +54,13 @@ class CustomerGenerationManager {
     }
   }
 
-  generateCustomerFromArrivalRate(arrivalRate: number, simulationHour: number): void {
+  generateCustomerFromArrivalRate(arrivalRate: number, isOpeningHours: boolean): void {
     const intervalInSeconds: number = 1 / arrivalRate
 
     if (this.intervalId) clearInterval(this.intervalId) // PREVENT DUPLICATE CUSTOMER GENERATION
 
     this.intervalId = setInterval(() => {
-      const customer: Customer = this.generateCustomer(simulationHour)
+      const customer: Customer = this.generateCustomer(isOpeningHours)
       this.appendCustomerToArrivalStateQueue(customer)
     }, modifyInterval(intervalInSeconds))
   }
