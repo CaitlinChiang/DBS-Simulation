@@ -1,21 +1,22 @@
-import { ReactElement, useState, useEffect } from 'react'
-import CustomerElement from './Customer'
+import { ReactElement } from 'react'
+// import { ReactElement, useState, useEffect } from 'react'
+// import CustomerElement from './Customer'
 import './Floorplan.css'
 // import { CustomerPosition } from '../../enums/customerPosition'
 // import { CustomerAnimationState } from '../../enums/customerAnimationState'
-import { Customer } from '../../types/customer'
+// import { Customer } from '../../types/customer'
 
 const Floorplan = (): ReactElement => {
-  const [startSimulation, setStartSimulation] = useState<boolean>(false)
-  const [customerArrivalRate, setCustomerArrivalRatew] = useState<number>(3000)
+  // const [startSimulation, setStartSimulation] = useState<boolean>(false)
+  // const [customerArrivalRate, setCustomerArrivalRatew] = useState<number>(3000)
   
   // Arriving Customers to Main Queue
-  const [arrivingCustomers, setArrivingCustomers] = useState<Customer[]>([])
-  const [mainQueue, setMainQueue] = useState<Customer[]>([])
+  // const [arrivingCustomers, setArrivingCustomers] = useState<Customer[]>([])
+  // const [mainQueue, setMainQueue] = useState<Customer[]>([])
 
   // Customers in Waiting Area to Counters
   const waitingAreaCapacity = 15
-  const [waitingArea, setWaitingArea] = useState<Customer[]>([])
+  // const [waitingArea, setWaitingArea] = useState<Customer[]>([])
 
   return (
     <div className='floorplan'>
@@ -24,7 +25,7 @@ const Floorplan = (): ReactElement => {
         <div className='counters-batch01'>
           <div className='counter-batch01-item floorplan-element'>
             <p>COUNTER 01</p>
-          </div>
+          </div>w
           <div className='counter-batch01-item floorplan-element'>
             <p>COUNTER 02</p>
           </div>
@@ -161,20 +162,20 @@ const Floorplan = (): ReactElement => {
       <div className='main-queue'>
         <p>MAIN QUEUE</p>
         <div>
-          {mainQueue.map((customer) => (
+          {/* {mainQueue.map((customer) => (
             <div key={customer.id} className="customer moving-to-waiting-area">
             </div>
-          ))}
+          ))} */}
         </div>
       </div>
       {/* End of Main Queue */}
 
       {/* Start of Spawning Section */}
       <div className='spawning-section'>
-        {arrivingCustomers.map((customer) => (
+        {/* {arrivingCustomers.map((customer) => (
           <div key={customer.id} className="customer moving-to-queue">
           </div>
-        ))}
+        ))} */}
       </div>
       {/* End of Spawning Section */}
     </div>
