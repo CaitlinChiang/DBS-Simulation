@@ -25,7 +25,6 @@ export enum StateFromQueueManagerDiscussionProbSolutionStaffEducation {
 export enum StateFromQueueManagerDiscussionProbSolutionErrorPrevention {
   QUEUE_MANAGER_DIRECTS = 0.785,
   QUEUE_MANAGER_REQUIRES_ASSISTANCE = 0.167,
-  CUSTOMER_MISSING_DOCUMENTS = 0.023,
   EXIT = 0.048
 }
 
