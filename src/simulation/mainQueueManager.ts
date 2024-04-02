@@ -14,8 +14,6 @@ import { returnLaterQueueAgainManager } from './returnLaterQueueAgainManager'
 import { stationManager } from './stationManager'
 
 class MainQueueManager {
-  constructor() {}
-
   private mainQueue: Customer[] = []
   private isQueueManagerAvailable: boolean = true
   private queueManagerDiscussionEndTime: number = 0

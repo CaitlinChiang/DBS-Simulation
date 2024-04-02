@@ -7,8 +7,6 @@ import { updateCustomerDwellTimeAndExitSimulation } from '../utils/updateCustome
 import { stationManager } from './stationManager'
 
 class ReturnLaterQueueNumberManager {
-  constructor() {}
-
   appendCustomerToReturnLaterQueueNumberQueue(customer: Customer): void {
     customer.state = State.RETURN_LATER_QN
     this.handleCustomerActionFromStartOfDigitalQueue(customer)
