@@ -26,17 +26,14 @@ const Main = (): ReactElement => {
   const [stationInfo, setStationInfo] = useState<Record<string, StationManagerInfo>>()
   const [returnLaterQueueAgainInfo, setReturnLaterQueueAgainInfo] = useState<number>(0)
   
-  // RESET SIMULATION WHEN PARAMETERS OF SOLUTION CHOICE AND ARRIVAL RATE CHANGES
-  useEffect(() => {
-    if (!startSimulation) return
-
-    resetSimulation();
-    setTimeout(() => setStartSimulation(true), 100)
-  }, [solutionChoice, arrivalRate, speedMultiplier])
-
-  const resetSimulation = () => {
-    setStartSimulation(false)
-    setSimulationHour(10)
+  // RESET SIMULATION WHEN BUTTON IS CLICKED
+  const toggleSimulation = () => {
+    if (startSimulation) {
+      // RESTART SIMULATION
+      window.location.reload()
+    } else {
+      setStartSimulation(!startSimulation)
+    }
   }
 
   // TIME SIMULATION
@@ -111,6 +108,7 @@ const Main = (): ReactElement => {
             onChange={(e) => useStore.getState().setSpeedMultiplier(Number(e.target.value))}
             min="1"
             max="100"
+            disabled={startSimulation}
           />
           <span>{speedMultiplier}x</span>
         </div>
@@ -139,6 +137,7 @@ const Main = (): ReactElement => {
                 value="SharedDatabase"
                 checked={solutionChoice === SolutionChoice.SHARED_DATABASE}
                 onChange={() => useStore.getState().setSolutionChoice(SolutionChoice.SHARED_DATABASE)}
+                disabled={startSimulation}
               />
               Shared Database
             </label>
@@ -149,6 +148,7 @@ const Main = (): ReactElement => {
                 value="EducationForStaff"
                 checked={solutionChoice === SolutionChoice.STAFF_EDUCATION}
                 onChange={() => useStore.getState().setSolutionChoice(SolutionChoice.STAFF_EDUCATION)}
+                disabled={startSimulation}
               />
               Education for Staff
             </label>
@@ -159,6 +159,7 @@ const Main = (): ReactElement => {
                 value="RemovalOf2ndVTMVerification"
                 checked={solutionChoice === SolutionChoice.VTM_VERIFICATION_REMOVAL}
                 onChange={() => useStore.getState().setSolutionChoice(SolutionChoice.VTM_VERIFICATION_REMOVAL)}
+                disabled={startSimulation}
               />
               Removal of 2nd VTM Verification
             </label>
@@ -179,10 +180,10 @@ const Main = (): ReactElement => {
         {/* Start of Start Simulation Button */}
         <div>
           <button
-            onClick={() => setStartSimulation(!startSimulation)}
+            onClick={toggleSimulation}
             className={startSimulation ? 'stop-simulation' : 'start-simulation'}
           >
-            Start Simulation
+            {startSimulation ? 'Restart Simulation' : 'Start Simulation'}
           </button>
         </div>
         {/* End of Start Simulation Button */}
