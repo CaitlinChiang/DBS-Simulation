@@ -1,9 +1,12 @@
-export enum StateFromArrivalProb {
+export enum StateFromArrivalOpeningHoursProb {
   MAIN_QUEUE = 0.479,
   ATMS = 0.308,
   ATM_COINS = 0.039,
   VTMS = 0.067,
   RETURN_LATER_QN = 0.107
+}
+export enum StateFromArrivalClosingHoursProb {
+  VTMS = 1.000
 }
 
 export enum StateFromMainQueueProb {

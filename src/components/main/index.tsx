@@ -59,7 +59,7 @@ const Main = (): ReactElement => {
 
   useEffect(() => {
     if (startSimulation) {
-      customerGenerationManager.generateCustomerFromArrivalRate(arrivalRate)
+      customerGenerationManager.generateCustomerFromArrivalRate(arrivalRate, simulationHour)
     }
   }, [startSimulation, simulationHour])
 

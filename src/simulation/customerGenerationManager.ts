@@ -1,7 +1,7 @@
 import { Customer } from '../types/customer'
 import { Demographic, DemographicArrivalProb } from '../enums/demographic'
 import { State } from '../enums/states'
-import { StateFromArrivalProb } from '../enums/probabilities'
+import { StateFromArrivalOpeningHoursProb, StateFromArrivalClosingHoursProb } from '../enums/probabilities'
 import { Station } from '../enums/station'
 import { modifyInterval } from '../utils/modifyInterval'
 import { returnResultBasedOnProb } from '../utils/returnResultBasedOnProb'
@@ -16,15 +16,20 @@ class CustomerGenerationManager {
     return returnResultBasedOnProb(DemographicArrivalProb)
   }
 
-  private randomizeStateFromArrival(): State {
-    return returnResultBasedOnProb(StateFromArrivalProb)
+  private randomizeStateFromArrival(simulationHour: number): State {
+    const isOpeningHours: boolean = simulationHour >= 10 && simulationHour <= 18
+    
+    if (isOpeningHours) {
+      return returnResultBasedOnProb(StateFromArrivalOpeningHoursProb)
+    }
+    return returnResultBasedOnProb(StateFromArrivalClosingHoursProb)
   }
 
-  generateCustomer(): Customer {
+  generateCustomer(simulationHour: number): Customer {
     const newCustomer: Customer = {
       id: (new Date()).toISOString(),
       demographic: this.randomizeDemographic(),
-      state: this.randomizeStateFromArrival(),
+      state: this.randomizeStateFromArrival(simulationHour),
       dwellTime: 0
     }
 
@@ -51,13 +56,13 @@ class CustomerGenerationManager {
     }
   }
 
-  generateCustomerFromArrivalRate(arrivalRate: number): void {
+  generateCustomerFromArrivalRate(arrivalRate: number, simulationHour: number): void {
     const intervalInSeconds: number = 1 / arrivalRate
 
     if (this.intervalId) clearInterval(this.intervalId) // PREVENT DUPLICATE CUSTOMER GENERATION
 
     this.intervalId = setInterval(() => {
-      const customer: Customer = this.generateCustomer()
+      const customer: Customer = this.generateCustomer(simulationHour)
       this.appendCustomerToArrivalStateQueue(customer)
     }, modifyInterval(intervalInSeconds))
   }
