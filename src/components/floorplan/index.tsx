@@ -74,7 +74,7 @@ const Floorplan = (): ReactElement => {
           <div className='waiting-area-grid'>
             {Array.from({ length: waitingAreaCapacity }, (_, index) => (
               <div key={index} className='waiting-area-cell'>
-                {waitingArea[index] ? waitingArea[index].element : null}
+                {/* {waitingArea[index] ? waitingArea[index].element : null} */}
               </div>
             ))}
           </div>
