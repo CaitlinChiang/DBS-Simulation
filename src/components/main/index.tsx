@@ -18,13 +18,16 @@ const Main = (): ReactElement => {
   const { solutionChoice, speedMultiplier } = useStore.getState()
 
   const [simulationHour, setSimulationHour] = useState(10)
-  const [arrivalRate, setArrivalRate] = useState<number>(0)
+  const [arrivalRate, setArrivalRate] = useState<number>(0.00001)
+  const [isCustomRateEnabled, setIsCustomRateEnabled] = useState(false)
   const [startSimulation, setStartSimulation] = useState(false)
 
   const [demographicAverageDwellTimeInfo, setDemographicAverageDwellTimeInfo] = useState<DemographicAverageDwellTimeInfo[]>([])
   const [mainQueueInfo, setMainQueueInfo] = useState<MainQueueLengthAndQueueManagerInfo>({})
   const [stationInfo, setStationInfo] = useState<Record<string, StationManagerInfo>>()
   const [returnLaterQueueAgainInfo, setReturnLaterQueueAgainInfo] = useState<number>(0)
+
+  const isOpeningHours: boolean = simulationHour >= 10 && simulationHour <= 17
   
   // RESET SIMULATION WHEN BUTTON IS CLICKED
   const toggleSimulation = () => {
@@ -53,15 +56,17 @@ const Main = (): ReactElement => {
 
   // GENERATION OF CUSTOMERS
   useEffect(() => {
-    const defaultArrivalRate = returnArrivalRateBasedFromPoissonDist(simulationHour)
-    setArrivalRate(defaultArrivalRate)
-  }, [])
-
-  useEffect(() => {
     if (startSimulation) {
-      customerGenerationManager.generateCustomerFromArrivalRate(arrivalRate, simulationHour)
+      const effectiveArrivalRate: number = isCustomRateEnabled ? arrivalRate : returnArrivalRateBasedFromPoissonDist(simulationHour)
+      setArrivalRate(effectiveArrivalRate)
+      customerGenerationManager.generateCustomerFromArrivalRate(arrivalRate, isOpeningHours)
     }
-  }, [startSimulation, simulationHour])
+  }, [startSimulation, simulationHour, arrivalRate])
+
+  // RESET SUBSYSTEMS ONCE ITS CLOSING HOURS
+  useEffect(() => {
+    if (!isOpeningHours) mainQueueManager.resetMainQueueManager()
+  }, [isOpeningHours])
 
   // ACTIVATE SUBSYSTEMS
   stationManager.startSubsystemSimulation()
@@ -112,12 +117,21 @@ const Main = (): ReactElement => {
           />
           <span>{speedMultiplier}x</span>
         </div>
-       
+
         <div className='simulation-settings-item'>
+          <input
+            id='customRateEnabled'
+            type='checkbox'
+            checked={isCustomRateEnabled}
+            onChange={(e) => setIsCustomRateEnabled(e.target.checked)}
+            disabled={startSimulation}
+          />
+          <label htmlFor='customRateEnabled'>Set Custom Arrival Rate:</label>
+
           <label className='simulation-settings-item-label' htmlFor='customerSpawnRate'>Customer Spawn Rate</label>
           <input
             type='range'
-            min='0'
+            min='0.00001'
             max='1'
             step='0.01'
             value={arrivalRate}
