@@ -163,7 +163,6 @@ const Floorplan = (): ReactElement => {
         <div>
           {mainQueue.map((customer) => (
             <div key={customer.id} className="customer moving-to-waiting-area">
-              {customer.element}
             </div>
           ))}
         </div>
@@ -174,7 +173,6 @@ const Floorplan = (): ReactElement => {
       <div className='spawning-section'>
         {arrivingCustomers.map((customer) => (
           <div key={customer.id} className="customer moving-to-queue">
-            {customer.element}
           </div>
         ))}
       </div>
