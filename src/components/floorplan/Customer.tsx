@@ -1,7 +1,7 @@
 import { Demographic, DemographicIconDisplayColor } from '../../enums/demographic'
 
 const CustomerIcon = ({ color = 'black' }) => (
-  <svg fill={color} version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 575.616 575.616" width="20" height="20" xml:space="preserve">
+  <svg fill={color} version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 575.616 575.616" width="20" height="20" xmlSpace="preserve">
     <g>
       <g>
         <path d="M429.248,141.439C429.248,63.33,365.985,0,287.808,0c-78.109,0-141.439,63.33-141.439,141.439

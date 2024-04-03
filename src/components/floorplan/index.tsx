@@ -9,9 +9,9 @@ const Floorplan = ({
   stationInfo,
   returnLaterQueueAgainInfo,
 }: {
-  mainQueueInfo: MainQueueManagerInfo,
+  mainQueueInfo: MainQueueManagerInfo | null,
   stationInfo: Record<string, StationManagerInfo>,
-  returnLaterQueueAgainInfo: ReturnLaterQueueAgainManagerInfo
+  returnLaterQueueAgainInfo: ReturnLaterQueueAgainManagerInfo | null
 }): ReactElement => {
   const renderCustomerInStationEquipment = (index: number, station: Station): ReactElement | null => {
     const counterStatus = stationInfo[station]?.equipmentStatus[index - 1]

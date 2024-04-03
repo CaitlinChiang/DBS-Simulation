@@ -268,9 +268,9 @@ const Main = (): ReactElement => {
         <div className='mainQueueSectionInfo'>
           <h2>Main Queue & Queue Manager</h2>
 
-          <p className='stationInfo'>Main Queue Length: {mainQueueInfo.queueLength}</p>
-          <p className='stationInfo'>Manager in Discussion EndTime: {mainQueueInfo.queueManagerDiscussionEndTime}</p>
-          <p className='stationInfo'>Manager in Assistance EndTime: { mainQueueInfo.queueManagerAssistanceEndTime}</p>
+          <p className='stationInfo'>Main Queue Length: { mainQueueInfo?.queueLength }</p>
+          <p className='stationInfo'>Manager in Discussion EndTime: { mainQueueInfo?.queueManagerDiscussionEndTime }</p>
+          <p className='stationInfo'>Manager in Assistance EndTime: { mainQueueInfo?.queueManagerAssistanceEndTime }</p>
         </div>
 
         <div className='homeSectionInfo'>
