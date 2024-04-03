@@ -108,6 +108,15 @@ const Floorplan = ({
             </div>
           ))}
         </div>
+        <div className='app-booths-queue'>
+          <div className='app-booths-queue-grid'>
+            {Array.from({ length: stationInfo[Station.APP_BOOTHS]?.queueLength || 0 }).map((_, index) => (
+              <div key={index} className="customer-waiting-counters">
+                <CustomerElement demographic={stationInfo[Station.APP_BOOTHS]?.queue[index]?.demographic} />
+              </div>
+            ))}
+          </div>
+        </div>
         {/* End of App Booth Learnings */}
       </div>
 
@@ -118,6 +127,13 @@ const Floorplan = ({
             <p>ATM COINS</p>
             {renderCustomerInStationEquipment(1, Station.ATM_COINS)}
           </div>
+        </div>
+        <div className='atm-coins-queue'>
+          {Array.from({ length: stationInfo[Station.ATM_COINS]?.queueLength || 0 }).map((_, index) => (
+            <div key={index} className="customer-waiting-counters">
+              <CustomerElement demographic={stationInfo[Station.ATM_COINS]?.queue[index]?.demographic} />
+            </div>
+          ))}
         </div>
         {/* End of ATM Coin Machine */}
 
@@ -130,6 +146,15 @@ const Floorplan = ({
             </div>
           ))}
         </div>
+        <div className='atm-machines-batch02-waiting-area'>
+          <div className='atm-machines-batch02-waiting-area-grid'>
+            {Array.from({ length: stationInfo[Station.ATMS]?.queueLength || 0 }).filter((_, index) => index % 2 === 0).map((_, index) => (
+              <div key={index} className="customer-waiting-counters">
+                <CustomerElement demographic={stationInfo[Station.ATMS]?.queue[index * 2]?.demographic} />
+              </div>
+            ))}
+          </div>
+        </div>
         {/* End of ATMs Batch 02 */}
 
         {/* Start of VTM Machines */}
@@ -138,6 +163,13 @@ const Floorplan = ({
             <div key={`VTM-${index + 1}`} className='vtm-machine-item floorplan-element'>
               <p>VTM {index + 1}</p>
               {renderCustomerInStationEquipment(index + 1, Station.VTMS)}
+            </div>
+          ))}
+        </div>
+        <div className='vtm-machines-queue'>
+          {Array.from({ length: stationInfo[Station.VTMS]?.queueLength || 0 }).map((_, index) => (
+            <div key={index} className="customer-waiting-vtms">
+              <CustomerElement demographic={stationInfo[Station.VTMS]?.queue[index]?.demographic} />
             </div>
           ))}
         </div>
@@ -155,6 +187,15 @@ const Floorplan = ({
               {renderCustomerInStationEquipment(index + 1, Station.ATMS)}
             </div>
           ))}
+        </div>
+        <div className='atm-machines-batch01-waiting-area'>
+          <div className='atm-machines-batch01-waiting-area-grid'>
+            {Array.from({ length: stationInfo[Station.ATMS]?.queueLength || 0 }).filter((_, index) => index % 2 !== 0).map((_, index) => (
+              <div key={index} className="customer-waiting-counters">
+                <CustomerElement demographic={stationInfo[Station.ATMS]?.queue[index * 2 + 1]?.demographic} />
+              </div>
+            ))}
+          </div>
         </div>
         {/* End of ATMs Batch 01 */}
       </div>
