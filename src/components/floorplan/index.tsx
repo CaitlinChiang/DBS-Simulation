@@ -37,8 +37,8 @@ const Floorplan = ({
     ))
   }
 
-  const renderCustomersInReturningLaterArea = (): ReactElement[] => {
-    return returnLaterQueueAgainInfo.queue.map((customer, index) => (
+  const renderCustomersInReturningLaterArea = (): any => {
+    return returnLaterQueueAgainInfo?.queue.map((customer, index) => (
       <div key={index} className="customer-waiting-counters">
         <CustomerElement demographic={customer?.demographic} />
       </div>
@@ -162,7 +162,7 @@ const Floorplan = ({
       <div className='main-queue'>
         <p>MAIN QUEUE</p>
         <div>
-          {Array.from({ length: mainQueueInfo.queueLength }).map((_, index) => (
+          {Array.from({ length: mainQueueInfo?.queueLength || 0 }).map((_, index) => (
             <div key={index} className="customer-waiting-counters">
               <CustomerElement demographic={mainQueueInfo?.queue[index]?.demographic} />
             </div>
