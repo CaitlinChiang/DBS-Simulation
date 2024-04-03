@@ -3,6 +3,7 @@ import CustomerElement from './Customer'
 import './Floorplan.css'
 import { MainQueueManagerInfo, StationManagerInfo, ReturnLaterQueueAgainManagerInfo } from '../../types/managerInfo'
 import { Station, StationEquipmentStatus } from '../../enums/station'
+import { Demographic } from '../../enums/demographic'
 
 const Floorplan = ({
   mainQueueInfo,
@@ -190,11 +191,20 @@ const Floorplan = ({
       {/* End of Digital Queue Section */}
 
       {/* Start of Spawning Section */}
-      <div className='spawning-section'>
-        {/* {arrivingCustomers.map((customer) => (
-          <div key={customer.id} className="customer moving-to-queue">
-          </div>
-        ))} */}
+      <div className='customer-legend'>
+        <p>Legend for Customer Demographics</p>
+        <div className="customer-item">
+          <span>Local Elderly</span>
+          <CustomerElement demographic={Demographic.LOCAL_ELDERLY} />
+        </div>
+        <div className="customer-item">
+          <span>Local Adult</span>
+          <CustomerElement demographic={Demographic.LOCAL_ADULT} />
+        </div>
+        <div className="customer-item">
+          <span>Foreigners</span>
+          <CustomerElement demographic={Demographic.FOREIGNER} />
+        </div>
       </div>
       {/* End of Spawning Section */}
     </div>

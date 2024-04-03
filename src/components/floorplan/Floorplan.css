@@ -198,3 +198,23 @@ p {
   position: absolute;
 }
 /* END OF DIGITAL QUEUE INDICATOR SECTION STYLING */
+
+/* START OF CUSTOMER LEGEND STYLING */
+.customer-legend {
+  position: absolute;
+  margin-top: 700px;
+}
+
+.customer-item {
+  display: inline-block;
+  margin-right: 10px;
+}
+
+.customer-legend p {
+  font-size: 20px;
+}
+
+.customer-legend .customer-item span {
+  margin-left: 8px;
+}
+/* END OF CUSTOMER LEGEND STYLING */
