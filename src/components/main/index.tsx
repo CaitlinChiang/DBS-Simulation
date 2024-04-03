@@ -2,7 +2,7 @@ import { ReactElement, useState, useEffect } from 'react'
 import './main.css'
 import Floorplan from '../floorplan'
 
-import { DemographicAverageDwellTimeInfo, MainQueueLengthAndQueueManagerInfo, StationManagerInfo } from '../../types/managerInfo'
+import { DemographicAverageDwellTimeInfo, MainQueueManagerInfo, ReturnLaterQueueAgainManagerInfo, StationManagerInfo } from '../../types/managerInfo'
 import { Station } from '../../enums/station'
 import { SolutionChoice } from '../../enums/solutionChoice'
 import { demographicAverageDwellTimeManager } from '../../utils/demographicAverageDwellTimeManager'
@@ -27,9 +27,9 @@ const Main = (): ReactElement => {
   const [startSimulation, setStartSimulation] = useState(false)
 
   const [demographicAverageDwellTimeInfo, setDemographicAverageDwellTimeInfo] = useState<DemographicAverageDwellTimeInfo[]>([])
-  const [mainQueueInfo, setMainQueueInfo] = useState<MainQueueLengthAndQueueManagerInfo>({})
+  const [mainQueueInfo, setMainQueueInfo] = useState<MainQueueManagerInfo>({})
   const [stationInfo, setStationInfo] = useState<Record<string, StationManagerInfo>>({})
-  const [returnLaterQueueAgainInfo, setReturnLaterQueueAgainInfo] = useState<number>(0)
+  const [returnLaterQueueAgainInfo, setReturnLaterQueueAgainInfo] = useState<ReturnLaterQueueAgainManagerInfo>({})
 
   const isOpeningHours: boolean = simulationHour >= 10 && simulationHour <= 17
 
@@ -113,13 +113,13 @@ const Main = (): ReactElement => {
       const demographicAverageDwellTimeInfo: DemographicAverageDwellTimeInfo[] = demographicAverageDwellTimeManager.getDemographicAverageDwellTimeInfo()
       setDemographicAverageDwellTimeInfo(demographicAverageDwellTimeInfo)
 
-      const mainQueueInfo: MainQueueLengthAndQueueManagerInfo = mainQueueManager.getMainQueueLengthAndQueueManagerInfo()
+      const mainQueueInfo: MainQueueManagerInfo = mainQueueManager.getMainQueueManagerInfo()
       setMainQueueInfo(mainQueueInfo)
 
-      const stationInfo: Record<string, StationManagerInfo> = stationManager.getStationQueueLengthAndEquipmentStatusInfo()
+      const stationInfo: Record<string, StationManagerInfo> = stationManager.getStationManagerInfo()
       setStationInfo(stationInfo)
 
-      const returnLaterQueueAgainInfo: number = returnLaterQueueAgainManager.getReturnLaterQueueAgainQueueLength()
+      const returnLaterQueueAgainInfo: ReturnLaterQueueAgainManagerInfo = returnLaterQueueAgainManager.getReturnLaterQueueAgainManagerInfo()
       setReturnLaterQueueAgainInfo(returnLaterQueueAgainInfo)
     }
 
@@ -275,7 +275,7 @@ const Main = (): ReactElement => {
 
         <div className='homeSectionInfo'>
           <h2>Customers Coming Back Later</h2>
-          <p className='stationInfo'>Number Returning: {returnLaterQueueAgainInfo}</p>
+          <p className='stationInfo'>Number Returning: {returnLaterQueueAgainInfo?.queueLength}</p>
         </div>
         
         <div className='stationSectionInfo'>

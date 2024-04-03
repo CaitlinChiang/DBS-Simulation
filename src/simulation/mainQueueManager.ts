@@ -1,5 +1,5 @@
 import { Customer } from '../types/customer'
-import { MainQueueLengthAndQueueManagerInfo } from '../types/managerInfo'
+import { MainQueueManagerInfo } from '../types/managerInfo'
 import { State, EventState } from '../enums/states'
 import { StateFromMainQueueProb, StateFromQueueManagerDirectsProb, StateFromQueueManagerRequiresAssistanceProb, StateFromCustomerMissingDocumentsProb } from '../enums/probabilities'
 import { QUEUE_MANAGER_DISCUSSION_DIST, QUEUE_MANAGER_ASSISTANCE_DIST } from '../enums/distributions'
@@ -19,9 +19,10 @@ class MainQueueManager {
   private queueManagerDiscussionEndTime: number = 0
   private queueManagerAssistanceEndTime: number = 0
 
-  getMainQueueLengthAndQueueManagerInfo(): MainQueueLengthAndQueueManagerInfo {
+  getMainQueueManagerInfo(): MainQueueManagerInfo {
     return {
-      mainQueueLength: this.mainQueue.length,
+      queueLength: this.mainQueue.length,
+      queue: this.mainQueue,
       isQueueManagerAvailable: this.isQueueManagerAvailable,
       queueManagerDiscussionEndTime: this.queueManagerDiscussionEndTime,
       queueManagerAssistanceEndTime: this.queueManagerAssistanceEndTime,

@@ -34,20 +34,22 @@ class StationManager {
     this.equipment[Station.APP_BOOTHS] = new Array(modifyAppBoothsEquipmentCount(StationEquipmentCount.APP_BOOTHS)).fill(null).map(() => ({ status: StationEquipmentStatus.VACANT, endUsageTime: 0, customer: null }))
   }
 
-  getStationQueueLengthAndEquipmentStatusInfo(): Record<string, StationManagerInfo> {
+  getStationManagerInfo(): Record<string, StationManagerInfo> {
     return Object.entries(this.queues).reduce((info, [station, queue]) => {
+      const queueLength = station === Station.COUNTERS ? [
+        queue.filter(customer => customer.isFromDigitalQueue).length,
+        queue.filter(customer => !customer.isFromDigitalQueue).length
+      ] : [queue.length]
+
+      const queueActual: Customer[] = this.queues[station as Station]
+
       const equipmentStatus = this.equipment[station as Station].map((equipment: Equipment) => ({
         status: equipment.status,
         endUsageTime: equipment.endUsageTime,
         customer: equipment?.customer,
       }))
-      
-      const queueLength = station === Station.COUNTERS ? [
-        queue.filter(customer => customer.isFromDigitalQueue).length,
-        queue.filter(customer => !customer.isFromDigitalQueue).length
-      ] : [queue.length]
   
-      info[station] = { queueLength, equipmentStatus }
+      info[station] = { queueLength, queue: queueActual, equipmentStatus }
 
       return info
     }, {} as Record<string, StationManagerInfo>)

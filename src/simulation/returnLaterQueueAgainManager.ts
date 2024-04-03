@@ -1,4 +1,5 @@
 import { Customer } from '../types/customer'
+import { ReturnLaterQueueAgainManagerInfo } from '../types/managerInfo'
 import { State } from '../enums/states'
 import { RETURN_LATER_QN_RANGE } from '../enums/ranges'
 import { calculateTotalDelayTime } from '../utils/calculateTime'
@@ -9,8 +10,11 @@ import { mainQueueManager } from './mainQueueManager'
 class ReturnLaterQueueAgainManager {
   private returnLaterQueueAgainQueue: Customer[] = []
 
-  getReturnLaterQueueAgainQueueLength(): number {
-    return this.returnLaterQueueAgainQueue.length
+  getReturnLaterQueueAgainManagerInfo(): ReturnLaterQueueAgainManagerInfo {
+    return { 
+      queueLength: this.returnLaterQueueAgainQueue.length,
+      queue: this.returnLaterQueueAgainQueue
+    }
   }
 
   appendCustomerToReturnLaterQueueAgainQueue(customer: Customer): void {
