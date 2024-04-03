@@ -15,3 +15,9 @@ export enum DemographicArrivalProb {
   LOCAL_ADULT = 0.450,
   FOREIGNER = 0.050
 }
+
+export enum DemographicIconDisplayColor {
+  LOCAL_ELDERLY = 'blue',
+  LOCAL_ADULT = 'green',
+  FOREIGNER = 'red'
+}
