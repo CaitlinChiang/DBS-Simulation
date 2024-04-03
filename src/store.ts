@@ -13,7 +13,7 @@ interface AppState {
 export const useStore = create<AppState>((set) => ({
   solutionChoice: SolutionChoice.NONE,
   setSolutionChoice: (choice: SolutionChoice) => set(() => ({ solutionChoice: choice })),
-  speedMultiplier: 30,
+  speedMultiplier: 10000,
   setSpeedMultiplier: (multiplier: number) => set(() => ({ speedMultiplier: multiplier })),
   isDataCollectionHours: false,
   setIsDataCollectionHours: (conditionResult: boolean) => set(() => ({ isDataCollectionHours: conditionResult }))
