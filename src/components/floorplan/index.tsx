@@ -110,7 +110,7 @@ const Floorplan = ({
         </div>
         <div className='app-booths-queue'>
           <div className='app-booths-queue-grid'>
-            {Array.from({ length: stationInfo[Station.APP_BOOTHS]?.queueLength || 0 }).map((_, index) => (
+            {Array.from({ length: stationInfo[Station.APP_BOOTHS]?.queueLength[0] || 0 }).map((_, index) => (
               <div key={index} className="customer-waiting-counters">
                 <CustomerElement demographic={stationInfo[Station.APP_BOOTHS]?.queue[index]?.demographic} />
               </div>
@@ -129,7 +129,7 @@ const Floorplan = ({
           </div>
         </div>
         <div className='atm-coins-queue'>
-          {Array.from({ length: stationInfo[Station.ATM_COINS]?.queueLength || 0 }).map((_, index) => (
+          {Array.from({ length: stationInfo[Station.ATM_COINS]?.queueLength[0] || 0 }).map((_, index) => (
             <div key={index} className="customer-waiting-counters">
               <CustomerElement demographic={stationInfo[Station.ATM_COINS]?.queue[index]?.demographic} />
             </div>
@@ -148,7 +148,7 @@ const Floorplan = ({
         </div>
         <div className='atm-machines-batch02-waiting-area'>
           <div className='atm-machines-batch02-waiting-area-grid'>
-            {Array.from({ length: stationInfo[Station.ATMS]?.queueLength || 0 }).filter((_, index) => index % 2 === 0).map((_, index) => (
+            {Array.from({ length: stationInfo[Station.ATMS]?.queueLength[0] || 0 }).filter((_, index) => index % 2 === 0).map((_, index) => (
               <div key={index} className="customer-waiting-counters">
                 <CustomerElement demographic={stationInfo[Station.ATMS]?.queue[index * 2]?.demographic} />
               </div>
@@ -167,7 +167,7 @@ const Floorplan = ({
           ))}
         </div>
         <div className='vtm-machines-queue'>
-          {Array.from({ length: stationInfo[Station.VTMS]?.queueLength || 0 }).map((_, index) => (
+          {Array.from({ length: stationInfo[Station.VTMS]?.queueLength[0] || 0 }).map((_, index) => (
             <div key={index} className="customer-waiting-vtms">
               <CustomerElement demographic={stationInfo[Station.VTMS]?.queue[index]?.demographic} />
             </div>
@@ -190,7 +190,7 @@ const Floorplan = ({
         </div>
         <div className='atm-machines-batch01-waiting-area'>
           <div className='atm-machines-batch01-waiting-area-grid'>
-            {Array.from({ length: stationInfo[Station.ATMS]?.queueLength || 0 }).filter((_, index) => index % 2 !== 0).map((_, index) => (
+            {Array.from({ length: stationInfo[Station.ATMS]?.queueLength[0] || 0 }).filter((_, index) => index % 2 !== 0).map((_, index) => (
               <div key={index} className="customer-waiting-counters">
                 <CustomerElement demographic={stationInfo[Station.ATMS]?.queue[index * 2 + 1]?.demographic} />
               </div>
@@ -201,6 +201,11 @@ const Floorplan = ({
       </div>
 
       {/* Start of Main Queue */}
+      <div className='queue-manager'>
+        <CustomerElement />
+        {(mainQueueInfo?.queueManagerDiscussionEndTime && mainQueueInfo?.queueManagerDiscussionEndTime > 0) ? <p>{'Status: Discussing'}</p> : null}
+        {(mainQueueInfo?.queueManagerAssistanceEndTime && mainQueueInfo?.queueManagerAssistanceEndTime > 0) ? <p>{'Status: Assisting'}</p> : null}
+      </div>
       <div className='main-queue'>
         <p>MAIN QUEUE</p>
         <div>

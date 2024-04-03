@@ -234,6 +234,12 @@ p {
   margin-top: 300px;
   position: absolute;
 }
+
+.queue-manager {
+  position: absolute;
+  margin-left: 480px;
+  margin-top: 350px;
+}
 /* END OF MAIN QUEUE STYLING */
 
 /* START OF RETURNING LATER QN INDICATOR SECTION STYLING */
