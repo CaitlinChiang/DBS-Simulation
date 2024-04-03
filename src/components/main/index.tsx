@@ -85,12 +85,12 @@ const Main = (): ReactElement => {
   
   // GENERATE EXCEL SHEET AND RESET SIMULATION WHEN RESTART SIMULATION BUTTON IS CLICKED
   const toggleSimulation = () => {
-    if (startSimulation) {
-      generateSimulationDataInExcel(collectedData)
-      window.location.reload()
-    } else {
-      setStartSimulation(!startSimulation)
-    }
+    setStartSimulation(!startSimulation)
+  }
+
+  const downloadAndRestartSimulation = () => {
+    generateSimulationDataInExcel(collectedData)
+    window.location.reload()
   }
 
   // GENERATION OF CUSTOMERS
@@ -122,6 +122,8 @@ const Main = (): ReactElement => {
 
   // FETCH INFORMATION FOR INTERFACE DISPLAY
   useEffect(() => {
+    if (!startSimulation) return
+
     const fetchInformation = () => {
       const demographicAverageDwellTimeInfo: DemographicAverageDwellTimeInfo[] = demographicAverageDwellTimeManager.getDemographicAverageDwellTimeInfo()
       setDemographicAverageDwellTimeInfo(demographicAverageDwellTimeInfo)
@@ -138,7 +140,7 @@ const Main = (): ReactElement => {
 
     const intervalId = setInterval(fetchInformation, modifyInterval(1))
     return () => clearInterval(intervalId)
-  }, [])
+  }, [startSimulation])
 
   return (
     <div className='Main'>
@@ -148,7 +150,7 @@ const Main = (): ReactElement => {
         <h3 className='simulation-settings'>Simulation Settings</h3>
 
         <h4>Simulation Day: {simulationDay}</h4>
-        <h4>Simulation Hour: {simulationHour}</h4>
+        <h4 style={{ marginTop: '-20px' }}>Simulation Hour: {simulationHour}</h4>
         <h4>Current Date Time: {(new Date()).toISOString()}</h4>
         <br />
 
@@ -245,7 +247,14 @@ const Main = (): ReactElement => {
             onClick={toggleSimulation}
             className={startSimulation ? 'stop-simulation' : 'start-simulation'}
           >
-            {startSimulation ? 'Restart Simulation' : 'Start Simulation'}
+            {startSimulation ? 'Stop Simulation' : 'Start Simulation'}
+          </button>
+        </div>
+        <div style={{ marginTop: '5px' }}>
+          <button
+            onClick={downloadAndRestartSimulation}
+          >
+            {'Restart Simulation'}
           </button>
         </div>
         {/* End of Start Simulation Button */}
