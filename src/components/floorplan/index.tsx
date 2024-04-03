@@ -2,8 +2,9 @@ import { ReactElement } from 'react'
 import CustomerElement from './Customer'
 import './Floorplan.css'
 import { MainQueueManagerInfo, StationManagerInfo, ReturnLaterQueueAgainManagerInfo } from '../../types/managerInfo'
-import { Station, StationEquipmentStatus } from '../../enums/station'
 import { Demographic } from '../../enums/demographic'
+import { Station, StationEquipmentStatus } from '../../enums/station'
+import { useStore } from '../../store'
 
 const Floorplan = ({
   mainQueueInfo,
@@ -14,6 +15,8 @@ const Floorplan = ({
   stationInfo: Record<string, StationManagerInfo>,
   returnLaterQueueAgainInfo: ReturnLaterQueueAgainManagerInfo | null
 }): ReactElement => {
+  const { isDataCollectionHours } = useStore.getState()
+
   const renderCustomerInStationEquipment = (index: number, station: Station): ReactElement | null => {
     const counterStatus = stationInfo[station]?.equipmentStatus[index - 1]
 
@@ -203,8 +206,8 @@ const Floorplan = ({
       {/* Start of Main Queue */}
       <div className='queue-manager'>
         <div className='colleague-speaking'>
-          <CustomerElement />
-          {(mainQueueInfo?.queueManagerAssistanceEndTime && mainQueueInfo?.queueManagerAssistanceEndTime > 0) ? <CustomerElement /> : null}
+          {isDataCollectionHours && <CustomerElement />}
+          {(isDataCollectionHours && mainQueueInfo?.queueManagerAssistanceEndTime && mainQueueInfo?.queueManagerAssistanceEndTime > 0) ? <CustomerElement /> : null}
         </div>
         {(mainQueueInfo?.queueManagerDiscussionEndTime && mainQueueInfo?.queueManagerDiscussionEndTime > 0) ? <p>{'Status: Discussing with Customer'}</p> : null}
         {(mainQueueInfo?.queueManagerAssistanceEndTime && mainQueueInfo?.queueManagerAssistanceEndTime > 0) ? <p>{'Status: Asking Assistance'}</p> : null}
