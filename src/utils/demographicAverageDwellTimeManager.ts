@@ -28,6 +28,14 @@ class DemographicAverageDwellTimeManager {
     ]
   }
 
+  resetDemographicDwellTimeData(): void {
+    this.demographicDwellTimeData = {
+      [Demographic.LOCAL_ELDERLY]: { totalDwellTime: 0, customerCount: 0 },
+      [Demographic.LOCAL_ADULT]: { totalDwellTime: 0, customerCount: 0 },
+      [Demographic.FOREIGNER]: { totalDwellTime: 0, customerCount: 0 }
+    }
+  }
+
   updateDemographicDwellTimeData(demographic: Demographic, dwellTime: number): void {
     const demographicDwellTime = this.demographicDwellTimeData[demographic]
 

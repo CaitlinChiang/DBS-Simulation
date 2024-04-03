@@ -32,6 +32,7 @@ const Main = (): ReactElement => {
   const [returnLaterQueueAgainInfo, setReturnLaterQueueAgainInfo] = useState<ReturnLaterQueueAgainManagerInfo | null>({ queueLength: 0, queue: [] })
 
   const isOpeningHours: boolean = simulationHour >= 10 && simulationHour <= 17
+  const countedHours: boolean = simulationHour >= 10 && simulationHour <= 18
 
   // RE-INITIALIZE STATION MANAGER IF THE SOLUTION CHOICE CHANGES
   useEffect(() => {
@@ -99,8 +100,16 @@ const Main = (): ReactElement => {
 
   // RESET SUBSYSTEMS ONCE ITS CLOSING HOURS
   useEffect(() => {
-    if (!isOpeningHours) mainQueueManager.resetMainQueueManager()
+    if (!isOpeningHours) {
+      mainQueueManager.resetMainQueueManager()
+    }
   }, [isOpeningHours])
+
+  useEffect(() => {
+    if (!countedHours) {
+      demographicAverageDwellTimeManager.resetDemographicDwellTimeData()
+    }
+  }, [countedHours])
 
   // ACTIVATE SUBSYSTEMS
   stationManager.startSubsystemSimulation()
