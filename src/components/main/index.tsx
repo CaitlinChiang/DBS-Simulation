@@ -27,9 +27,9 @@ const Main = (): ReactElement => {
   const [startSimulation, setStartSimulation] = useState(false)
 
   const [demographicAverageDwellTimeInfo, setDemographicAverageDwellTimeInfo] = useState<DemographicAverageDwellTimeInfo[]>([])
-  const [mainQueueInfo, setMainQueueInfo] = useState<MainQueueManagerInfo>({})
+  const [mainQueueInfo, setMainQueueInfo] = useState<MainQueueManagerInfo | null>({ queueLength: 0, queue: [], isQueueManagerAvailable: false, queueManagerDiscussionEndTime: 0, queueManagerAssistanceEndTime: 0 })
   const [stationInfo, setStationInfo] = useState<Record<string, StationManagerInfo>>({})
-  const [returnLaterQueueAgainInfo, setReturnLaterQueueAgainInfo] = useState<ReturnLaterQueueAgainManagerInfo>({})
+  const [returnLaterQueueAgainInfo, setReturnLaterQueueAgainInfo] = useState<ReturnLaterQueueAgainManagerInfo | null>({ queueLength: 0, queue: [] })
 
   const isOpeningHours: boolean = simulationHour >= 10 && simulationHour <= 17
 
@@ -268,7 +268,7 @@ const Main = (): ReactElement => {
         <div className='mainQueueSectionInfo'>
           <h2>Main Queue & Queue Manager</h2>
 
-          <p className='stationInfo'>Main Queue Length: {mainQueueInfo.mainQueueLength}</p>
+          <p className='stationInfo'>Main Queue Length: {mainQueueInfo.queueLength}</p>
           <p className='stationInfo'>Manager in Discussion EndTime: {mainQueueInfo.queueManagerDiscussionEndTime}</p>
           <p className='stationInfo'>Manager in Assistance EndTime: { mainQueueInfo.queueManagerAssistanceEndTime}</p>
         </div>
