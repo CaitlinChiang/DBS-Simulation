@@ -202,9 +202,12 @@ const Floorplan = ({
 
       {/* Start of Main Queue */}
       <div className='queue-manager'>
-        <CustomerElement />
-        {(mainQueueInfo?.queueManagerDiscussionEndTime && mainQueueInfo?.queueManagerDiscussionEndTime > 0) ? <p>{'Status: Discussing'}</p> : null}
-        {(mainQueueInfo?.queueManagerAssistanceEndTime && mainQueueInfo?.queueManagerAssistanceEndTime > 0) ? <p>{'Status: Assisting'}</p> : null}
+        <div className='colleague-speaking'>
+          <CustomerElement />
+          {(mainQueueInfo?.queueManagerAssistanceEndTime && mainQueueInfo?.queueManagerAssistanceEndTime > 0) ? <CustomerElement /> : null}
+        </div>
+        {(mainQueueInfo?.queueManagerDiscussionEndTime && mainQueueInfo?.queueManagerDiscussionEndTime > 0) ? <p>{'Status: Discussing with Customer'}</p> : null}
+        {(mainQueueInfo?.queueManagerAssistanceEndTime && mainQueueInfo?.queueManagerAssistanceEndTime > 0) ? <p>{'Status: Asking Assistance'}</p> : null}
       </div>
       <div className='main-queue'>
         <p>MAIN QUEUE</p>
