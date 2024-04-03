@@ -10,7 +10,7 @@ const modifyArrivalRate = (arrivalRate: number): number => {
 
   switch (solutionChoice) {
     case SolutionChoice.SHARED_DATABASE:
-      return arrivalRate * 0.833
+      return arrivalRate * 0.837
     case SolutionChoice.ERROR_PREVENTION:
       return arrivalRate * 0.953
   }
