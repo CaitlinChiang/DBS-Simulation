@@ -24,6 +24,10 @@ p {
 }
 
 .customer {
+  z-index: 2; 
+  position: absolute;
+}
+.customer-waiting-counters {
   z-index: 2;
 }
 /* END OF UNIVERSAL ELEMENT STYLING */
@@ -45,6 +49,7 @@ p {
 .counter-batch02-item {
   margin-right: 5px;
   display: inline-block;
+  position: relative;
 }
 
 .counters-batch03 {
@@ -88,17 +93,18 @@ p {
 }
 
 .divider-branch-outside {
-  margin-top: 200px;
+  margin-top: 70px;
   float: right;
   border: 1px solid #000;
   width: 330px;
-  margin-right: -70px;
+  margin-right: 15px;
 }
 /* END OF DIVIDERS STYLING */
 
 /* START OF APP BOOTHS STYLING */
 .app-booths {
   margin-left: 140px;
+  position: absolute;
 }
 
 .app-booth-item {
@@ -113,14 +119,16 @@ p {
 /* START OF ATM COINS STYLING */
 .atm-coin-machines {
   margin-left: 530px;
-  margin-top: -455px;
+  margin-top: -200px;
+  position: absolute;
 }
 /* END OF ATM COINS STYLING */
 
 /* START OF ATM MACHINES STYLING */
 .atm-machines-batch02 {
-  margin-left: 500px;
-  margin-top: -62px;
+  margin-left: 650px;
+  margin-top: -200px;
+  position: absolute;
 }
 
 .atm-machines-batch02-item {
@@ -129,9 +137,10 @@ p {
 }
 
 .atm-machines-batch01 {
-  float: right;
-  margin-top: 210px;
-  margin-right: -260px;
+  /* float: right; */
+  margin-top: 80px;
+  margin-left: 720px;
+  position: absolute;
 }
 
 .atm-machines-batch01-item {
@@ -143,8 +152,9 @@ p {
 /* START OF VTM MACHINES STYLING */
 .vtm-machines {
   float: right;
-  margin-top: -70px;
-  margin-right: 10px;
+  margin-top: -200px;
+  margin-left: 950px;
+  position: absolute;
 }
 
 .vtm-machine-item {
@@ -156,10 +166,35 @@ p {
 /* START OF MAIN QUEUE STYLING */
 .main-queue {
   width: 60px;
-  height: 300px;
+  height: 600px;
   border: 1px solid #000;
   background-color: rgb(255, 255, 255);
   margin-left: 410px;
-  margin-top: 400px;
+  margin-top: 300px;
+  position: absolute;
 }
 /* END OF MAIN QUEUE STYLING */
+
+/* START OF RETURNING LATER QN INDICATOR SECTION STYLING */
+.return-later-section {
+  width: 320px;
+  height: 180px;
+  border: 1px solid #000;
+  background-color: rgb(158, 158, 158);
+  margin-left: 700px;
+  margin-top: 400px;
+  position: absolute;
+}
+/* END OF RETURNING LATER QN INDICATOR SECTION STYLING */
+
+/* START OF DIGITAL QUEUE INDICATOR SECTION STYLING */
+.digital-waiting-area {
+  width: 320px;
+  height: 180px;
+  border: 1px solid #000;
+  background-color: rgb(158, 158, 158);
+  margin-left: 700px;
+  margin-top: 600px;
+  position: absolute;
+}
+/* END OF DIGITAL QUEUE INDICATOR SECTION STYLING */
