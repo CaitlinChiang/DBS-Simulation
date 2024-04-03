@@ -19,7 +19,7 @@ class StationManager {
     }
 
     this.equipment = {
-      [Station.APP_BOOTHS]: new Array(modifyAppBoothsEquipmentCount(StationEquipmentCount.APP_BOOTHS)).fill(null).map(() => ({ status: StationEquipmentStatus.VACANT, endUsageTime: 0, customer: null })),
+      [Station.APP_BOOTHS]: new Array(StationEquipmentCount.APP_BOOTHS).fill(null).map(() => ({ status: StationEquipmentStatus.VACANT, endUsageTime: 0, customer: null })),
       [Station.COUNTERS]: new Array(StationEquipmentCount.COUNTERS).fill(null).map(() => ({ status: StationEquipmentStatus.VACANT, endUsageTime: 0, customer: null })),
       [Station.ATMS]: new Array(StationEquipmentCount.ATMS).fill(null).map(() => ({ status: StationEquipmentStatus.VACANT, endUsageTime: 0, customer: null })),
       [Station.ATM_COINS]: new Array(StationEquipmentCount.ATM_COINS).fill(null).map(() => ({ status: StationEquipmentStatus.VACANT, endUsageTime: 0, customer: null })),
@@ -29,6 +29,10 @@ class StationManager {
 
   private queues: Record<Station, Customer[]>
   private equipment: Record<Station, Equipment[]>
+
+  init(): void {
+    this.equipment[Station.APP_BOOTHS] = new Array(modifyAppBoothsEquipmentCount(StationEquipmentCount.APP_BOOTHS)).fill(null).map(() => ({ status: StationEquipmentStatus.VACANT, endUsageTime: 0, customer: null }))
+  }
 
   getStationQueueLengthAndEquipmentStatusInfo(): Record<string, StationManagerInfo> {
     return Object.entries(this.queues).reduce((info, [station, queue]) => {

@@ -28,10 +28,15 @@ const Main = (): ReactElement => {
 
   const [demographicAverageDwellTimeInfo, setDemographicAverageDwellTimeInfo] = useState<DemographicAverageDwellTimeInfo[]>([])
   const [mainQueueInfo, setMainQueueInfo] = useState<MainQueueLengthAndQueueManagerInfo>({})
-  const [stationInfo, setStationInfo] = useState<Record<string, StationManagerInfo>>()
+  const [stationInfo, setStationInfo] = useState<Record<string, StationManagerInfo>>({})
   const [returnLaterQueueAgainInfo, setReturnLaterQueueAgainInfo] = useState<number>(0)
 
   const isOpeningHours: boolean = simulationHour >= 10 && simulationHour <= 17
+
+  // RE-INITIALIZE STATION MANAGER IF THE SOLUTION CHOICE CHANGES
+  useEffect(() => {
+    stationManager.init()
+  }, [solutionChoice])
 
   // HANDLE TIME SIMULATION ALONGSIDE DATA COLLECTION FOR EXCEL GENERATION
   const fetchAndSaveDemographicInformation = (hour: number): void => {
@@ -235,7 +240,11 @@ const Main = (): ReactElement => {
       {/* End of Sidebar */}
 
       <div className='content'>
-        <Floorplan />
+        <Floorplan
+          mainQueueInfo={mainQueueInfo}
+          stationInfo={stationInfo}
+          returnLaterQueueAgainInfo={returnLaterQueueAgainInfo}
+        />
       </div>
 
       <div className='simulationInformation'>
