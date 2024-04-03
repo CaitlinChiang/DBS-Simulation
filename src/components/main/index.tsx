@@ -16,7 +16,7 @@ import { returnLaterQueueAgainManager } from '../../simulation/returnLaterQueueA
 import { useStore } from '../../store'
 
 const Main = (): ReactElement => {
-  const { solutionChoice, speedMultiplier } = useStore.getState()
+  const { solutionChoice, speedMultiplier, setSolutionChoice, setSpeedMultiplier, setIsDataCollectionHours } = useStore()
 
   const [simulationHour, setSimulationHour] = useState(0)
   const [collectedData, setCollectedData] = useState<DemographicAverageDwellTimeInfo[][]>([])
@@ -80,7 +80,7 @@ const Main = (): ReactElement => {
   }, [simulationHour, startSimulation])
 
   useEffect(() => {
-    useStore.getState().setIsDataCollectionHours(isDataCollectionHours)
+    setIsDataCollectionHours(isDataCollectionHours)
   }, [simulationHour])
   
   // GENERATE EXCEL SHEET AND RESET SIMULATION WHEN RESTART SIMULATION BUTTON IS CLICKED
@@ -160,7 +160,7 @@ const Main = (): ReactElement => {
             id="speedMultiplier"
             type="number"
             value={speedMultiplier}
-            onChange={(e) => useStore.getState().setSpeedMultiplier(Number(e.target.value))}
+            onChange={(e) => setSpeedMultiplier(Number(e.target.value))}
             min="1"
             max="100"
             disabled={startSimulation}
@@ -200,7 +200,7 @@ const Main = (): ReactElement => {
                 type="radio"
                 value="SharedDatabase"
                 checked={solutionChoice === SolutionChoice.SHARED_DATABASE}
-                onChange={() => useStore.getState().setSolutionChoice(SolutionChoice.SHARED_DATABASE)}
+                onChange={() => setSolutionChoice(SolutionChoice.SHARED_DATABASE)}
                 disabled={startSimulation}
               />
               Shared Database
@@ -211,7 +211,7 @@ const Main = (): ReactElement => {
                 type="radio"
                 value="EducationForStaff"
                 checked={solutionChoice === SolutionChoice.STAFF_EDUCATION}
-                onChange={() => useStore.getState().setSolutionChoice(SolutionChoice.STAFF_EDUCATION)}
+                onChange={() => setSolutionChoice(SolutionChoice.STAFF_EDUCATION)}
                 disabled={startSimulation}
               />
               Education for Staff
@@ -222,7 +222,7 @@ const Main = (): ReactElement => {
                 type="radio"
                 value="RemovalOf2ndVTMVerification"
                 checked={solutionChoice === SolutionChoice.VTM_VERIFICATION_REMOVAL}
-                onChange={() => useStore.getState().setSolutionChoice(SolutionChoice.VTM_VERIFICATION_REMOVAL)}
+                onChange={() => setSolutionChoice(SolutionChoice.VTM_VERIFICATION_REMOVAL)}
                 disabled={startSimulation}
               />
               Removal of 2nd VTM Verification
@@ -233,7 +233,8 @@ const Main = (): ReactElement => {
                 type="radio"
                 value="MethodsForErrorPrevention"
                 checked={solutionChoice === SolutionChoice.ERROR_PREVENTION}
-                onChange={() => useStore.getState().setSolutionChoice(SolutionChoice.ERROR_PREVENTION)}
+                onChange={() => setSolutionChoice(SolutionChoice.ERROR_PREVENTION)}
+                disabled={startSimulation}
               />
               Methods for Error Prevention
             </label>
