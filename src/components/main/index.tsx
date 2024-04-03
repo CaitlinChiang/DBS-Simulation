@@ -6,6 +6,7 @@ import { DemographicAverageDwellTimeInfo, MainQueueLengthAndQueueManagerInfo, St
 import { Station } from '../../enums/station'
 import { SolutionChoice } from '../../enums/solutionChoice'
 import { demographicAverageDwellTimeManager } from '../../utils/demographicAverageDwellTimeManager'
+import { generateSimulationDataInExcel } from '../../utils/generateSimulationDataInExcel'
 import { modifyInterval } from '../../utils/modifyInterval'
 import { returnArrivalRateBasedFromPoissonDist } from '../../utils/returnArrivalRateFromPoissonDist'
 import { customerGenerationManager } from '../../simulation/customerGenerationManager'
@@ -17,7 +18,10 @@ import { useStore } from '../../store'
 const Main = (): ReactElement => {
   const { solutionChoice, speedMultiplier } = useStore.getState()
 
-  const [simulationHour, setSimulationHour] = useState(10)
+  const [simulationHour, setSimulationHour] = useState(0)
+  const [collectedData, setCollectedData] = useState<DemographicAverageDwellTimeInfo[][]>([])
+  const [simulationDay, setSimulationDay] = useState<number>(0) // 1 SIMULATION SET = 1 DAY OF 24HRS
+
   const [arrivalRate, setArrivalRate] = useState<number>(0.00001)
   const [isCustomRateEnabled, setIsCustomRateEnabled] = useState(false)
   const [startSimulation, setStartSimulation] = useState(false)
@@ -28,31 +32,56 @@ const Main = (): ReactElement => {
   const [returnLaterQueueAgainInfo, setReturnLaterQueueAgainInfo] = useState<number>(0)
 
   const isOpeningHours: boolean = simulationHour >= 10 && simulationHour <= 17
+
+  // HANDLE TIME SIMULATION ALONGSIDE DATA COLLECTION FOR EXCEL GENERATION
+  const fetchAndSaveDemographicInformation = (hour: number): void => {
+    const demographicAverageDwellTimeInfo: DemographicAverageDwellTimeInfo[] = demographicAverageDwellTimeManager.getDemographicAverageDwellTimeInfo()
+    const hourString: any = hour.toString().padStart(2, '0')
+    const dayString: any = simulationDay.toString()
   
-  // RESET SIMULATION WHEN BUTTON IS CLICKED
+    const hourlyData = demographicAverageDwellTimeInfo.reduce((acc: any, {demographic, averageDwellTime}) => {
+      acc[demographic] = averageDwellTime
+      return acc
+    }, {})
+  
+    setCollectedData((prevData) => {
+      const newData: any = { ...prevData }
+      if (!newData[dayString]) newData[dayString] = {}
+      newData[dayString][hourString] = hourlyData
+      return newData
+    })
+  }
+  
+  useEffect(() => {
+    if (startSimulation) {
+      const interval = setInterval(() => {
+        setSimulationHour((currentHour) => {
+          let newHour = currentHour + 1
+          if (newHour >= 24) newHour = 0
+          fetchAndSaveDemographicInformation(newHour)
+          return newHour
+        })
+      }, 3600000 / speedMultiplier)
+  
+      return () => clearInterval(interval)
+    }
+  }, [startSimulation, speedMultiplier, simulationDay])
+
+  useEffect(() => {
+    if (simulationHour === 0 && startSimulation) {
+      setSimulationDay((currentDay) => currentDay + 1)
+    }
+  }, [simulationHour, startSimulation])
+  
+  // GENERATE EXCEL SHEET AND RESET SIMULATION WHEN RESTART SIMULATION BUTTON IS CLICKED
   const toggleSimulation = () => {
     if (startSimulation) {
-      // RESTART SIMULATION
+      generateSimulationDataInExcel(collectedData)
       window.location.reload()
     } else {
       setStartSimulation(!startSimulation)
     }
   }
-
-  // TIME SIMULATION
-  useEffect(() => {
-    if (startSimulation) {
-      const interval = setInterval(() => {
-        setSimulationHour((currentHour) => {
-          const newHour = currentHour + 1
-          if (newHour >= 24) return 0
-          return newHour
-        })
-      }, 3600000 / speedMultiplier)
-
-      return () => clearInterval(interval)
-    }
-  }, [startSimulation, speedMultiplier])
 
   // GENERATION OF CUSTOMERS
   useEffect(() => {
@@ -100,6 +129,7 @@ const Main = (): ReactElement => {
         {/* Start of Simulation Settings */}
         <h3 className='simulation-settings'>Simulation Settings</h3>
 
+        <h4>Simulation Day: {simulationDay}</h4>
         <h4>Simulation Hour: {simulationHour}</h4>
         <h4>Current Date Time: {(new Date()).toISOString()}</h4>
         <br />
