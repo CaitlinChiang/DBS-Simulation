@@ -6,6 +6,8 @@ interface AppState {
   setSolutionChoice: (choice: SolutionChoice) => void
   speedMultiplier: number
   setSpeedMultiplier: (multiplier: number) => void
+  isDataCollectionHours: boolean
+  setIsDataCollectionHours: (conditionResult: boolean) => void
 }
 
 export const useStore = create<AppState>((set) => ({
@@ -13,4 +15,6 @@ export const useStore = create<AppState>((set) => ({
   setSolutionChoice: (choice: SolutionChoice) => set(() => ({ solutionChoice: choice })),
   speedMultiplier: 30,
   setSpeedMultiplier: (multiplier: number) => set(() => ({ speedMultiplier: multiplier })),
+  isDataCollectionHours: false,
+  setIsDataCollectionHours: (conditionResult: boolean) => set(() => ({ isDataCollectionHours: conditionResult }))
 }))

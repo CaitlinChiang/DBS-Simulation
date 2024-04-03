@@ -1,5 +1,6 @@
 import { DemographicAverageDwellTimeInfo } from '../types/managerInfo'
 import { Demographic } from '../enums/demographic'
+import { useStore } from '../store'
 
 class DemographicAverageDwellTimeManager {
   private demographicDwellTimeData: Record<Demographic, { totalDwellTime: number, customerCount: number }>
@@ -13,11 +14,8 @@ class DemographicAverageDwellTimeManager {
   }
 
   calculateAverageDwellTime(demographic: Demographic): number {
-    const demographicDwellTime = this.demographicDwellTimeData[demographic]
-    const { totalDwellTime, customerCount } = demographicDwellTime
-
-    if (customerCount === 0) return 0
-    return totalDwellTime / customerCount
+    if (this.demographicDwellTimeData[demographic].customerCount === 0) return 0
+    return this.demographicDwellTimeData[demographic].totalDwellTime / this.demographicDwellTimeData[demographic].customerCount
   }
 
   getDemographicAverageDwellTimeInfo(): DemographicAverageDwellTimeInfo[] {
@@ -37,6 +35,9 @@ class DemographicAverageDwellTimeManager {
   }
 
   updateDemographicDwellTimeData(demographic: Demographic, dwellTime: number): void {
+    const { isDataCollectionHours } = useStore.getState()
+    if (!isDataCollectionHours) return
+    
     const demographicDwellTime = this.demographicDwellTimeData[demographic]
 
     demographicDwellTime.totalDwellTime += dwellTime

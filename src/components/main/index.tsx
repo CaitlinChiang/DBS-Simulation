@@ -32,7 +32,7 @@ const Main = (): ReactElement => {
   const [returnLaterQueueAgainInfo, setReturnLaterQueueAgainInfo] = useState<ReturnLaterQueueAgainManagerInfo | null>({ queueLength: 0, queue: [] })
 
   const isOpeningHours: boolean = simulationHour >= 10 && simulationHour <= 17
-  const countedHours: boolean = simulationHour >= 10 && simulationHour <= 18
+  const isDataCollectionHours: boolean = simulationHour >= 10 && simulationHour <= 18
 
   // RE-INITIALIZE STATION MANAGER IF THE SOLUTION CHOICE CHANGES
   useEffect(() => {
@@ -78,6 +78,10 @@ const Main = (): ReactElement => {
       setSimulationDay((currentDay) => currentDay + 1)
     }
   }, [simulationHour, startSimulation])
+
+  useEffect(() => {
+    useStore.getState().setIsDataCollectionHours(isDataCollectionHours)
+  }, [simulationHour])
   
   // GENERATE EXCEL SHEET AND RESET SIMULATION WHEN RESTART SIMULATION BUTTON IS CLICKED
   const toggleSimulation = () => {
@@ -106,10 +110,10 @@ const Main = (): ReactElement => {
   }, [isOpeningHours])
 
   useEffect(() => {
-    if (!countedHours) {
+    if (!isDataCollectionHours) {
       demographicAverageDwellTimeManager.resetDemographicDwellTimeData()
     }
-  }, [countedHours])
+  }, [isDataCollectionHours])
 
   // ACTIVATE SUBSYSTEMS
   stationManager.startSubsystemSimulation()
