@@ -178,7 +178,6 @@ const Main = (): ReactElement => {
           />
           <label htmlFor='customRateEnabled'>Set Custom Arrival Rate:</label>
 
-          <label className='simulation-settings-item-label' htmlFor='customerSpawnRate'>Customer Spawn Rate</label>
           <input
             type='range'
             min='0.00001'
@@ -187,7 +186,7 @@ const Main = (): ReactElement => {
             value={arrivalRate}
             onChange={(e) => setArrivalRate(parseFloat(e.target.value))}
           />
-          <span>{arrivalRate}</span>
+          <span>Rate: {arrivalRate}</span>
         </div>
         {/* End of Simulation Settings */}
 
