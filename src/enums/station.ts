@@ -8,7 +8,7 @@ export enum Station {
 
 export enum StationEquipmentAverageUsageTime {
   APP_BOOTHS = 360,
-  COUNTERS = 1560,
+  COUNTERS = 5000,
   ATMS = 300,
   ATM_COINS = 660,
   VTMS = 516
