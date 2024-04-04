@@ -186,6 +186,7 @@ const Main = (): ReactElement => {
             value={arrivalRate}
             onChange={(e) => setArrivalRate(parseFloat(e.target.value))}
           />
+          <br />
           <span>Rate: {arrivalRate}</span>
         </div>
         {/* End of Simulation Settings */}
