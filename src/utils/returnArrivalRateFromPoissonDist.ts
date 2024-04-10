@@ -13,6 +13,8 @@ const modifyArrivalRate = (arrivalRate: number): number => {
       return arrivalRate * 0.837
     case SolutionChoice.ERROR_PREVENTION:
       return arrivalRate * 0.953
+    case SolutionChoice.ALL:
+      return arrivalRate * 0.790 //The logic here is simple. 7 people and 2 people from either solution that affect arrival rate. basically 34/43
   }
 
   return arrivalRate

@@ -238,6 +238,17 @@ const Main = (): ReactElement => {
               />
               Methods for Error Prevention
             </label>
+            <br />
+            <label>
+              <input
+                type="radio"
+                value="All"
+                checked={solutionChoice === SolutionChoice.ALL}
+                onChange={() => setSolutionChoice(SolutionChoice.ALL)}
+                disabled={startSimulation}
+              />
+              All
+            </label>
           </form>
         </div>
         {/* End of Solutions to Simulate */}
