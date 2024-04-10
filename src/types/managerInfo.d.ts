@@ -1,5 +1,5 @@
-import { Customer } from '../types/customer'
-import { Equipment } from '../types/equipment'
+import { Customer } from './customer'
+import { Equipment } from './equipment'
 import { Demographic } from '../enums/demographic'
 
 export type DemographicAverageDwellTimeInfo = {

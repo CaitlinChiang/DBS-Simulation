@@ -41,4 +41,3 @@ export const calculateTotalDelayTime = (rangeInSeconds: number, customer: Custom
   
   return roundedModifiedDelayTime
 }
-

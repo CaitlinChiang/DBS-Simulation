@@ -21,14 +21,25 @@ export enum StateFromQueueManagerDiscussionProb {
   EXIT = 0.047
 }
 export enum StateFromQueueManagerDiscussionProbSolutionStaffEducation {
-  QUEUE_MANAGER_DIRECTS = 0.921, //comon
-  CUSTOMER_MISSING_DOCUMENTS = 0.023, //comon
-  EXIT = 0.056 //comon
+  QUEUE_MANAGER_DIRECTS = 0.921, //common
+  CUSTOMER_MISSING_DOCUMENTS = 0.023, //common
+  EXIT = 0.056 //common
 }
 export enum StateFromQueueManagerDiscussionProbSolutionErrorPrevention {
-  QUEUE_MANAGER_DIRECTS = 0.785, //comon
-  QUEUE_MANAGER_REQUIRES_ASSISTANCE = 0.167, //comon
-  EXIT = 0.048 //comon
+  QUEUE_MANAGER_DIRECTS = 0.785, //common
+  QUEUE_MANAGER_REQUIRES_ASSISTANCE = 0.167, //common
+  EXIT = 0.048 //common
+}
+export enum StateFromQueueManagerDiscussionProbAll {
+  // let's start w one solution at a time. let's go with the education first
+  // QUEUE_MANAGER_REQUIRES_ASSISTANCE = 0,//requires assistance
+  // QUEUE_MANAGER_DIRECTS = 0.921, // requires assistance
+  // EXIT = 0.056, //solves their problem
+  //CUSTOMER_MISSING_DOCUMENTS = 0.023, //missing documents
+  // now we need to change for the missing documents section
+  CUSTOMER_MISSING_DOCUMENTS = 0,
+  EXIT = 0.057, // 0.056/(0.056 + 0.921)
+  QUEUE_MANAGER_DIRECTS = 0.924 // 0.921/(0.056 + 0.921)
 }
 
 export enum StateFromQueueManagerDirectsProb {
@@ -58,17 +69,3 @@ export enum StateFromMissedQueueProb {
   RETURN_LATER_QN = 0.500,
   EXIT = 0.500
 }
-
-
-export enum StateFromQueueManagerDiscussionProbAll {
-  // let's start w one solution at a time. let's go with the education first
-  // QUEUE_MANAGER_REQUIRES_ASSISTANCE = 0,//requires assistance
-  // QUEUE_MANAGER_DIRECTS = 0.921, // requires assistance
-  // EXIT = 0.056, //solves their problem
-  //CUSTOMER_MISSING_DOCUMENTS = 0.023, //missing documents
-  // now we need to change for the missing documents section
-  CUSTOMER_MISSING_DOCUMENTS = 0,
-  EXIT = 0.057, // 0.056/(0.056 + 0.921)
-  QUEUE_MANAGER_DIRECTS = 0.924 // 0.921/(0.056 + 0.921)
-}
-
