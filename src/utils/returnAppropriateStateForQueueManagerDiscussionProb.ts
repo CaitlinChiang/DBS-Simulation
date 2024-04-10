@@ -1,5 +1,5 @@
 import { State, EventState } from '../enums/states'
-import { StateFromQueueManagerDiscussionProb, StateFromQueueManagerDiscussionProbSolutionStaffEducation, StateFromQueueManagerDiscussionProbSolutionErrorPrevention } from '../enums/probabilities'
+import { StateFromQueueManagerDiscussionProb, StateFromQueueManagerDiscussionProbSolutionStaffEducation, StateFromQueueManagerDiscussionProbSolutionErrorPrevention, StateFromQueueManagerDiscussionProbAll } from '../enums/probabilities'
 import { SolutionChoice } from '../enums/solutionChoice'
 import { returnResultBasedOnProb } from './returnResultBasedOnProb'
 import { useStore } from '../store'
@@ -12,7 +12,9 @@ export const returnAppropriateStateForQueueManagerDiscussionProb = (): State | E
       return returnResultBasedOnProb(StateFromQueueManagerDiscussionProbSolutionStaffEducation)
     case SolutionChoice.ERROR_PREVENTION:
       return returnResultBasedOnProb(StateFromQueueManagerDiscussionProbSolutionErrorPrevention)
-  }
+    case SolutionChoice.ALL:
+      return returnResultBasedOnProb(StateFromQueueManagerDiscussionProbAll)
+    }
 
   return returnResultBasedOnProb(StateFromQueueManagerDiscussionProb)
 }
