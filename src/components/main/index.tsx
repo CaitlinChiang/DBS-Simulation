@@ -3,6 +3,7 @@ import './main.css'
 import Floorplan from '../floorplan'
 
 import { DemographicAverageDwellTimeInfo, MainQueueManagerInfo, ReturnLaterQueueAgainManagerInfo, StationManagerInfo } from '../../types/managerInfo'
+import { Demographic } from '../../enums/demographic'
 import { Station } from '../../enums/station'
 import { SolutionChoice } from '../../enums/solutionChoice'
 import { demographicAverageDwellTimeManager } from '../../utils/demographicAverageDwellTimeManager'
@@ -16,7 +17,7 @@ import { returnLaterQueueAgainManager } from '../../simulation/returnLaterQueueA
 import { useStore } from '../../store'
 
 const Main = (): ReactElement => {
-  const { solutionChoice, speedMultiplier, setSolutionChoice, setSpeedMultiplier, setIsDataCollectionHours } = useStore()
+  const { solutionChoice, speedMultiplier, setSolutionChoice, setSpeedMultiplier, setIsDataCollectionHours, demographicArrivalProb, setDemographicArrivalProb } = useStore()
 
   const [simulationHour, setSimulationHour] = useState(0)
   const [collectedData, setCollectedData] = useState<DemographicAverageDwellTimeInfo[][]>([])
@@ -25,6 +26,7 @@ const Main = (): ReactElement => {
   const [arrivalRate, setArrivalRate] = useState<number>(0.00001)
   const [isCustomRateEnabled, setIsCustomRateEnabled] = useState(false)
   const [startSimulation, setStartSimulation] = useState(false)
+  const [isValidProbSum, setIsValidProbSum] = useState(true)
 
   const [demographicAverageDwellTimeInfo, setDemographicAverageDwellTimeInfo] = useState<DemographicAverageDwellTimeInfo[]>([])
   const [mainQueueInfo, setMainQueueInfo] = useState<MainQueueManagerInfo | null>({ queueLength: 0, queue: [], isQueueManagerAvailable: false, queueManagerDiscussionEndTime: 0, queueManagerAssistanceEndTime: 0 })
@@ -142,17 +144,27 @@ const Main = (): ReactElement => {
     return () => clearInterval(intervalId)
   }, [startSimulation])
 
+  // CHANGE VALUE FOR DEMOGRAPHIC PROBABILITY
+  useEffect(() => {
+    const totalProb = Object.values(demographicArrivalProb).reduce((sum, value) => sum + value, 0)
+    setIsValidProbSum(totalProb.toFixed(2) === '1.00')
+  }, [demographicArrivalProb])
+
+  const handleDemographicArrivalProbChange = (demographic: Demographic, value: number) => {
+    const newValue = Math.max(0, Math.min(1, value))
+
+    setDemographicArrivalProb({
+      ...demographicArrivalProb,
+      [demographic]: newValue
+    })
+  }
+
   return (
     <div className='Main'>
       {/* Start of Sidebar */}
       <div className='sidebar'>
         {/* Start of Simulation Settings */}
         <h3 className='simulation-settings'>Simulation Settings</h3>
-
-        <h4>Simulation Day: {simulationDay}</h4>
-        <h4 style={{ marginTop: '-20px' }}>Simulation Hour: {simulationHour}</h4>
-        <h4>Current Date Time: {(new Date()).toISOString()}</h4>
-        <br />
 
         <div className='simulation-settings-item'>
           <label htmlFor='simulationSpeed'>Simulation Speed</label>
@@ -188,6 +200,35 @@ const Main = (): ReactElement => {
           />
           <br />
           <span>Rate: {arrivalRate}</span>
+        </div>
+
+        <div className='simulation-settings-item'>
+          <label htmlFor='customRateEnabled'>Prob for Local Elderly:</label>
+          <input
+            value={demographicArrivalProb[Demographic.LOCAL_ELDERLY]}
+            onChange={(e) => handleDemographicArrivalProbChange(Demographic.LOCAL_ELDERLY, parseFloat(e.target.value))}
+            disabled={startSimulation}
+          />
+          <br />
+
+          <label htmlFor='customRateEnabled'>Prob for Local Adult:</label>
+          <input
+            value={demographicArrivalProb[Demographic.LOCAL_ADULT]}
+            onChange={(e) => handleDemographicArrivalProbChange(Demographic.LOCAL_ADULT, parseFloat(e.target.value))}
+            disabled={startSimulation}
+          />
+          <br />
+
+          <label htmlFor='customRateEnabled'>Prob for Foreigner:</label>
+          <input
+            value={demographicArrivalProb[Demographic.FOREIGNER]}
+            onChange={(e) => handleDemographicArrivalProbChange(Demographic.FOREIGNER, parseFloat(e.target.value))}
+            disabled={startSimulation}
+          />
+
+          {!isValidProbSum && (
+            <p style={{ color: 'red' }}>Error: Total probability must sum to 1.</p>
+          )}
         </div>
         {/* End of Simulation Settings */}
 
@@ -258,6 +299,7 @@ const Main = (): ReactElement => {
           <button
             onClick={toggleSimulation}
             className={startSimulation ? 'stop-simulation' : 'start-simulation'}
+            disabled={!isValidProbSum}
           >
             {startSimulation ? 'Stop Simulation' : 'Start Simulation'}
           </button>
@@ -275,6 +317,8 @@ const Main = (): ReactElement => {
 
       <div className='content'>
         <Floorplan
+          simulationDay={simulationDay}
+          simulationHour={simulationHour}
           mainQueueInfo={mainQueueInfo}
           stationInfo={stationInfo}
           returnLaterQueueAgainInfo={returnLaterQueueAgainInfo}

@@ -7,10 +7,14 @@ import { Station, StationEquipmentStatus } from '../../enums/station'
 import { useStore } from '../../store'
 
 const Floorplan = ({
+  simulationDay,
+  simulationHour,
   mainQueueInfo,
   stationInfo,
   returnLaterQueueAgainInfo,
 }: {
+  simulationDay: number,
+  simulationHour: number,
   mainQueueInfo: MainQueueManagerInfo | null,
   stationInfo: Record<string, StationManagerInfo>,
   returnLaterQueueAgainInfo: ReturnLaterQueueAgainManagerInfo | null
@@ -242,7 +246,7 @@ const Floorplan = ({
       </div>
       {/* End of Digital Queue Section */}
 
-      {/* Start of Spawning Section */}
+      {/* Start of Extra Information Section */}
       <div className='customer-legend'>
         <p>Legend for Customer Demographics</p>
         <div className="customer-item">
@@ -258,7 +262,13 @@ const Floorplan = ({
           <CustomerElement demographic={Demographic.FOREIGNER} />
         </div>
       </div>
-      {/* End of Spawning Section */}
+
+      <div className='simulation-date-time'>
+        <p><b>Simulation Day:</b> {simulationDay}</p>
+        <p><b>Simulation Hour:</b> {simulationHour}</p>
+        <p><b>Simulation Date Time:</b> {(new Date()).toISOString()}</p>
+      </div>
+      {/* End of Extra Information Section */}
     </div>
   )
 }

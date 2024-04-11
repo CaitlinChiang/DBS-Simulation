@@ -273,7 +273,8 @@ p {
 /* START OF CUSTOMER LEGEND STYLING */
 .customer-legend {
   position: absolute;
-  margin-top: 700px;
+  margin-top: 520px;
+  margin-left: -100px;
 }
 
 .customer-item {
@@ -289,3 +290,16 @@ p {
   margin-left: 8px;
 }
 /* END OF CUSTOMER LEGEND STYLING */
+
+/* START OF SIMULATION DATE TIME STYLING */
+.simulation-date-time {
+  position: absolute;
+  margin-top: 350px;
+  margin-left: -100px;
+  text-align: left;
+}
+
+.simulation-date-time p {
+  font-size: 20px;
+}
+/* END OF SIMULATION DATE TIME STYLING */

@@ -1,5 +1,5 @@
 import { Customer } from '../types/customer'
-import { Demographic, DemographicArrivalProb } from '../enums/demographic'
+import { Demographic } from '../enums/demographic'
 import { State } from '../enums/states'
 import { StateFromArrivalOpeningHoursProb, StateFromArrivalClosingHoursProb } from '../enums/probabilities'
 import { Station } from '../enums/station'
@@ -8,12 +8,14 @@ import { returnResultBasedOnProb } from '../utils/returnResultBasedOnProb'
 import { mainQueueManager } from './mainQueueManager'
 import { returnLaterQueueNumberManager } from './returnLaterQueueNumberManager'
 import { stationManager } from './stationManager'
+import { useStore } from '../store'
 
 class CustomerGenerationManager {
   private intervalId?: number
 
   private randomizeDemographic(): Demographic {
-    return returnResultBasedOnProb(DemographicArrivalProb)
+    const { demographicArrivalProb } = useStore.getState()
+    return returnResultBasedOnProb(demographicArrivalProb)
   }
 
   private randomizeStateFromArrival(isOpeningHours: boolean): State {    
