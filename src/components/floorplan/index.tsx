@@ -19,7 +19,7 @@ const Floorplan = ({
   stationInfo: Record<string, StationManagerInfo>,
   returnLaterQueueAgainInfo: ReturnLaterQueueAgainManagerInfo | null
 }): ReactElement => {
-  const { isDataCollectionHours } = useStore.getState()
+  const { isOpeningHours } = useStore.getState()
 
   const renderCustomerInStationEquipment = (index: number, station: Station): ReactElement | null => {
     const counterStatus = stationInfo[station]?.equipmentStatus[index - 1]
@@ -210,8 +210,8 @@ const Floorplan = ({
       {/* Start of Main Queue */}
       <div className='queue-manager'>
         <div className='colleague-speaking'>
-          {isDataCollectionHours && <CustomerElement />}
-          {(isDataCollectionHours && mainQueueInfo?.queueManagerAssistanceEndTime && mainQueueInfo?.queueManagerAssistanceEndTime > 0) ? <CustomerElement /> : null}
+          {isOpeningHours && <CustomerElement />}
+          {(isOpeningHours && mainQueueInfo?.queueManagerAssistanceEndTime && mainQueueInfo?.queueManagerAssistanceEndTime > 0) ? <CustomerElement /> : null}
         </div>
         {(mainQueueInfo?.queueManagerDiscussionEndTime && mainQueueInfo?.queueManagerDiscussionEndTime > 0) ? <p>{'Status: Discussing with Customer'}</p> : null}
         {(mainQueueInfo?.queueManagerAssistanceEndTime && mainQueueInfo?.queueManagerAssistanceEndTime > 0) ? <p>{'Status: Asking Assistance'}</p> : null}

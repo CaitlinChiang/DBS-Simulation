@@ -12,6 +12,7 @@ import { returnResultBasedOnProb } from '../utils/returnResultBasedOnProb'
 import { updateCustomerDwellTimeAndExitSimulation } from '../utils/updateCustomerDwellTimeAndExitSimulation'
 import { returnLaterQueueAgainManager } from './returnLaterQueueAgainManager'
 import { stationManager } from './stationManager'
+import { useStore } from '../store'
 
 class MainQueueManager {
   private mainQueue: Customer[] = []
@@ -102,7 +103,9 @@ class MainQueueManager {
         this.handleQueueMangerRequiresAssistance(customerToProcess)
         break
       case EventState.CUSTOMER_MISSING_DOCUMENTS:
-        this.handleCustomerMissingDocuments(customerToProcess)
+        const { isOpeningHours } = useStore.getState()
+
+        if (isOpeningHours) this.handleCustomerMissingDocuments(customerToProcess)
         break
       case State.EXIT: // SOLVES CUSTOMER ISSUE SUCCESSFULLY
         updateCustomerDwellTimeAndExitSimulation(customerToProcess)

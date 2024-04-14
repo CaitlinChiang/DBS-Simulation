@@ -17,7 +17,7 @@ import { returnLaterQueueAgainManager } from '../../simulation/returnLaterQueueA
 import { useStore } from '../../store'
 
 const Main = (): ReactElement => {
-  const { solutionChoice, speedMultiplier, setSolutionChoice, setSpeedMultiplier, setIsDataCollectionHours, demographicArrivalProb, setDemographicArrivalProb } = useStore()
+  const { solutionChoice, speedMultiplier, setSolutionChoice, setSpeedMultiplier, setIsOpeningHours, setIsDataCollectionHours, demographicArrivalProb, setDemographicArrivalProb } = useStore()
 
   const [simulationHour, setSimulationHour] = useState(0)
   const [collectedData, setCollectedData] = useState<DemographicAverageDwellTimeInfo[][]>([])
@@ -82,6 +82,7 @@ const Main = (): ReactElement => {
   }, [simulationHour, startSimulation])
 
   useEffect(() => {
+    setIsOpeningHours(isOpeningHours)
     setIsDataCollectionHours(isDataCollectionHours)
   }, [simulationHour])
   
@@ -108,8 +109,9 @@ const Main = (): ReactElement => {
   useEffect(() => {
     if (!isOpeningHours) {
       mainQueueManager.resetMainQueueManager()
+      returnLaterQueueAgainManager.resetReturnLaterQueueAgainManager()
     }
-  }, [isOpeningHours])
+  }, [simulationHour])
 
   useEffect(() => {
     if (!isDataCollectionHours) {
