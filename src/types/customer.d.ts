@@ -7,6 +7,6 @@ export type Customer = {
   demographic: Demographic
   state: State | Station
   dwellTime: number
-  qaDelayTime?: number
+  qaDelayDate?: Date
   isFromDigitalQueue?: boolean
 }

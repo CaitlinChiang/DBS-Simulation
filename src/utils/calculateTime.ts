@@ -31,13 +31,15 @@ export const calculateTotalDwellTime = (customer: Customer): number => {
   return totalDwellTimeWithSpeedMultiplier
 }
 
-export const calculateTotalDelayTime = (rangeInSeconds: number, customer: Customer): number => {
+export const calculateDelayReturnDate = (rangeInSeconds: number, customer: Customer): Date => {
   const { speedMultiplier } = useStore.getState()
 
   const totalDelayTime: number = rangeInSeconds + DemographicAdditionalServiceTime[customer.demographic]
   const delayTimeInMilliseconds: number = totalDelayTime * 1000
   const delayTimeWithSpeedMultiplier: number = delayTimeInMilliseconds / speedMultiplier
+  const dateNow: Date = new Date()
   const roundedModifiedDelayTime: number = Math.max(0, Math.round(delayTimeWithSpeedMultiplier))
-  
-  return roundedModifiedDelayTime
+  const delayDateTime = new Date(dateNow.getTime() + roundedModifiedDelayTime)
+
+  return delayDateTime
 }
