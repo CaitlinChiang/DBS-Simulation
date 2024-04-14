@@ -50,12 +50,24 @@
 .simulation-settings-item {
   margin-bottom: 50px;
   font-size: 13px;
+  align-items: center;
 }
 
 .simulation-settings-item label {
   display: block;
   text-align: left;
+  font-size: 13px;
+  margin-right: 10px;
 }
+
+.simulation-settings-item input {
+  width: 50px;
+}
+
+.simulation-settings-title {
+  margin-bottom: 10px; 
+}
+
 
 .simulation-settings-item label[for="customRateEnabled"] {
   text-align: center;
@@ -124,8 +136,8 @@
   position: absolute;
   top: 0;
   left: 0;
-  height: 25px;
-  width: 25px;
+  height: 60px !important;  
+  width: 60px !important; 
   background-color: #eee;
   border-radius: 50%;
 }
@@ -141,10 +153,10 @@
 }
 
 .checkmark:after {
-  top: 9px;
-  left: 9px;
-  width: 7px;
-  height: 7px;
+  top: 8px; 
+  left: 8px; 
+  width: 30px;
+  height: 30px;
   border-radius: 50%;
   background: #333;
 }

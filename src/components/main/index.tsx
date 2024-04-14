@@ -179,7 +179,6 @@ const Main = (): ReactElement => {
             max="100"
             disabled={startSimulation}
           />
-          <span>{speedMultiplier}x</span>
         </div>
 
         <div className="customer-demographic-section">
@@ -243,34 +242,35 @@ const Main = (): ReactElement => {
 
         {/* Solutions to Simulate */}
         <div className='simulation-settings-item'>
-          <h3>Solutions for Simulation</h3>
+          <h3 className='simulation-settings-title'>Solutions for Simulation</h3>
+
           <form>
             <label>
               <input
                 type="radio"
-                value="All"
+                value="All Solutions Combined"
                 checked={solutionChoice === SolutionChoice.ALL}
                 onChange={() => setSolutionChoice(SolutionChoice.ALL)}
                 disabled={startSimulation}
               />
-              All
+              All Solutions Combined
             </label>
             <br />
             <label>
               <input
                 type="radio"
-                value="SharedDatabase"
+                value="Central Knowledge Repository"
                 checked={solutionChoice === SolutionChoice.SHARED_DATABASE}
                 onChange={() => setSolutionChoice(SolutionChoice.SHARED_DATABASE)}
                 disabled={startSimulation}
               />
-              Shared Database
+              Central Knowledge Repository
             </label>
             <br />
             <label>
               <input
                 type="radio"
-                value="EducationForStaff"
+                value="Education for Staff"
                 checked={solutionChoice === SolutionChoice.STAFF_EDUCATION}
                 onChange={() => setSolutionChoice(SolutionChoice.STAFF_EDUCATION)}
                 disabled={startSimulation}
@@ -281,23 +281,23 @@ const Main = (): ReactElement => {
             <label>
               <input
                 type="radio"
-                value="RemovalOf2ndVTMVerification"
+                value="Simplified VTM Process"
                 checked={solutionChoice === SolutionChoice.VTM_VERIFICATION_REMOVAL}
                 onChange={() => setSolutionChoice(SolutionChoice.VTM_VERIFICATION_REMOVAL)}
                 disabled={startSimulation}
               />
-              Removal of 2nd VTM Verification
+              Simplified VTM Process
             </label>
             <br />
             <label>
               <input
                 type="radio"
-                value="MethodsForErrorPrevention"
+                value="Digital Document Checklist"
                 checked={solutionChoice === SolutionChoice.ERROR_PREVENTION}
                 onChange={() => setSolutionChoice(SolutionChoice.ERROR_PREVENTION)}
                 disabled={startSimulation}
               />
-              Methods for Error Prevention
+              Digital Document Checklist
             </label>
           </form>
         </div>
@@ -322,7 +322,7 @@ const Main = (): ReactElement => {
             onClick={downloadAndRestartSimulation}
             style={{ flex: 1, minWidth: 0 }}
           >
-            {'Restart Simulation'}
+            {'Reset Simulation'}
           </button>
         </div>
 
