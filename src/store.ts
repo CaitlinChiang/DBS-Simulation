@@ -7,6 +7,8 @@ interface AppState {
   setSolutionChoice: (choice: SolutionChoice) => void
   speedMultiplier: number
   setSpeedMultiplier: (multiplier: number) => void
+  isOpeningHours: boolean
+  setIsOpeningHours: (conditionResult: boolean) => void
   isDataCollectionHours: boolean
   setIsDataCollectionHours: (conditionResult: boolean) => void
   demographicArrivalProb: DemographicArrivalProbType
@@ -16,8 +18,10 @@ interface AppState {
 export const useStore = create<AppState>((set) => ({
   solutionChoice: SolutionChoice.NONE,
   setSolutionChoice: (choice: SolutionChoice) => set(() => ({ solutionChoice: choice })),
-  speedMultiplier: 10000,
+  speedMultiplier: 1000,
   setSpeedMultiplier: (multiplier: number) => set(() => ({ speedMultiplier: multiplier })),
+  isOpeningHours: true,
+  setIsOpeningHours: (conditionResult: boolean) => set(() => ({ isOpeningHours: conditionResult })),
   isDataCollectionHours: false,
   setIsDataCollectionHours: (conditionResult: boolean) => set(() => ({ isDataCollectionHours: conditionResult })),
   demographicArrivalProb: {
