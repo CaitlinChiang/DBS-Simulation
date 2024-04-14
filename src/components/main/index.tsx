@@ -166,7 +166,7 @@ const Main = (): ReactElement => {
       {/* Start of Sidebar */}
       <div className='sidebar'>
         {/* Start of Simulation Settings */}
-        <h3 className='simulation-settings'>Simulation Settings</h3>
+        <h1 className='simulation-settings'>Simulation Settings</h1>
 
         <div className='simulation-settings-item'>
           <label htmlFor='simulationSpeed'>Simulation Speed</label>
@@ -182,6 +182,42 @@ const Main = (): ReactElement => {
           <span>{speedMultiplier}x</span>
         </div>
 
+        <div className="customer-demographic-section">
+          <h3>Customer Demographic Distribution</h3>
+          <div className='simulation-settings-item'>
+            <label htmlFor='localElderlyProbability'>Probability of Local Elderly</label>
+            <input
+              id="localElderlyProbability"
+              value={demographicArrivalProb[Demographic.LOCAL_ELDERLY]}
+              onChange={(e) => handleDemographicArrivalProbChange(Demographic.LOCAL_ELDERLY, parseFloat(e.target.value))}
+              disabled={startSimulation}
+            />
+          </div>
+
+          <div className='simulation-settings-item'>
+            <label htmlFor='localAdultProbability'>Probability of Local Young Adult</label>
+            <input
+              id="localAdultProbability"
+              value={demographicArrivalProb[Demographic.LOCAL_ADULT]}
+              onChange={(e) => handleDemographicArrivalProbChange(Demographic.LOCAL_ADULT, parseFloat(e.target.value))}
+              disabled={startSimulation}
+            />
+          </div>
+
+          <div className='simulation-settings-item'>
+            <label htmlFor='foreignerProbability'>Probability of Foreigner</label>
+            <input
+              id="foreignerProbability"
+              value={demographicArrivalProb[Demographic.FOREIGNER]}
+              onChange={(e) => handleDemographicArrivalProbChange(Demographic.FOREIGNER, parseFloat(e.target.value))}
+              disabled={startSimulation}
+            />
+          </div>
+          {!isValidProbSum && (
+            <p style={{ color: 'red' }}>Error: Total probability must sum to 1.</p>
+          )}
+        </div>
+        
         <div className='simulation-settings-item'>
           <input
             id='customRateEnabled'
@@ -190,7 +226,7 @@ const Main = (): ReactElement => {
             onChange={(e) => setIsCustomRateEnabled(e.target.checked)}
             disabled={startSimulation}
           />
-          <label htmlFor='customRateEnabled'>Set Custom Arrival Rate:</label>
+          <label htmlFor='customRateEnabled'>Customer Arrival Rate</label>
 
           <input
             type='range'
@@ -203,40 +239,11 @@ const Main = (): ReactElement => {
           <br />
           <span>Rate: {arrivalRate}</span>
         </div>
-
-        <div className='simulation-settings-item'>
-          <label htmlFor='customRateEnabled'>Prob for Local Elderly:</label>
-          <input
-            value={demographicArrivalProb[Demographic.LOCAL_ELDERLY]}
-            onChange={(e) => handleDemographicArrivalProbChange(Demographic.LOCAL_ELDERLY, parseFloat(e.target.value))}
-            disabled={startSimulation}
-          />
-          <br />
-
-          <label htmlFor='customRateEnabled'>Prob for Local Adult:</label>
-          <input
-            value={demographicArrivalProb[Demographic.LOCAL_ADULT]}
-            onChange={(e) => handleDemographicArrivalProbChange(Demographic.LOCAL_ADULT, parseFloat(e.target.value))}
-            disabled={startSimulation}
-          />
-          <br />
-
-          <label htmlFor='customRateEnabled'>Prob for Foreigner:</label>
-          <input
-            value={demographicArrivalProb[Demographic.FOREIGNER]}
-            onChange={(e) => handleDemographicArrivalProbChange(Demographic.FOREIGNER, parseFloat(e.target.value))}
-            disabled={startSimulation}
-          />
-
-          {!isValidProbSum && (
-            <p style={{ color: 'red' }}>Error: Total probability must sum to 1.</p>
-          )}
-        </div>
         {/* End of Simulation Settings */}
 
         {/* Solutions to Simulate */}
         <div className='simulation-settings-item'>
-          <h3>Solutions to Simulate</h3>
+          <h3>Solutions for Simulation</h3>
           <form>
             <label>
               <input
@@ -297,22 +304,29 @@ const Main = (): ReactElement => {
         {/* End of Solutions to Simulate */}
 
         {/* Start of Start Simulation Button */}
-        <div>
+        <div style={{ display: 'flex', gap: '10px' }}>
           <button
             onClick={toggleSimulation}
             className={startSimulation ? 'stop-simulation' : 'start-simulation'}
             disabled={!isValidProbSum}
+            style={{
+              flex: 1,
+              minWidth: 0,
+              backgroundColor: startSimulation ? '#1a1a1a' : '#FF3333',
+              color: '#FFFFFF' // Always white
+            }}
           >
-            {startSimulation ? 'Stop Simulation' : 'Start Simulation'}
+            {startSimulation ? 'Start Simulation' : 'Stop Simulation'}
           </button>
-        </div>
-        <div style={{ marginTop: '5px' }}>
           <button
             onClick={downloadAndRestartSimulation}
+            style={{ flex: 1, minWidth: 0 }}
           >
             {'Restart Simulation'}
           </button>
         </div>
+
+
         {/* End of Start Simulation Button */}
       </div>
       {/* End of Sidebar */}

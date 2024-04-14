@@ -1,5 +1,5 @@
 .sidebar {
-  width: 200px;
+  width: 300px;
   padding: 0px 20px;
   position: fixed;
   top: 0;
@@ -15,11 +15,50 @@
 }
 
 .simulation-settings {
-  margin: 50px 0;
+  margin: 30px 0;
+  font-size: 28px;
+  text-align: left;
+}
+
+.customer-demographic-section h3 {
+  text-align: left;
+  font-size: 16px;
+}
+
+.customer-demographic-section .simulation-settings-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.customer-demographic-section .simulation-settings-item label {
+  margin-right: 10px; 
+  font-size: 13px; 
+  width: 250px;
+}
+
+.customer-demographic-section .simulation-settings-item input {
+  display: inline-block !important;
+  width: 50px !important; 
+}
+
+.simulation-settings-item h3 {
+  text-align: left;
+  font-size: 16px;
 }
 
 .simulation-settings-item {
   margin-bottom: 50px;
+  font-size: 13px;
+}
+
+.simulation-settings-item label {
+  display: block;
+  text-align: left;
+}
+
+.simulation-settings-item label[for="customRateEnabled"] {
+  text-align: center;
 }
 
 .content {
@@ -63,4 +102,49 @@
 
 .no-bullets {
   list-style-type: none;
+}
+
+.circle-option {
+  position: relative;
+  padding-left: 35px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.circle-option input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  left: 0;
+  top: 0;
+}
+
+.checkmark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 25px;
+  width: 25px;
+  background-color: #eee;
+  border-radius: 50%;
+}
+
+.checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+.circle-option input:checked ~ .checkmark:after {
+  display: block;
+}
+
+.checkmark:after {
+  top: 9px;
+  left: 9px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #333;
 }
