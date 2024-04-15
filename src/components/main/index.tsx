@@ -212,7 +212,7 @@ const Main = (): ReactElement => {
           </div>
 
           <div className='simulation-settings-item'>
-            <label htmlFor='localAdultProbability'>Probability of Local Young Adult</label>
+            <label htmlFor='localAdultProbability'>Probability of Local Adult</label>
             <input
               id="localAdultProbability"
               value={demographicArrivalProb[Demographic.LOCAL_ADULT]}
