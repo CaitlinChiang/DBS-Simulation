@@ -160,110 +160,142 @@ const Main = (): ReactElement => {
       [demographic]: newValue
     })
   }
-
+  
   return (
     <div className='Main'>
+      {/* Start of Header */}
+      <div className="topnav">
+        <div className="logo">
+          <img src="/images/logo-name.jpg" alt="Your Logo" style={{ width: "110px", height: "55px" }} />
+        </div>
+        <div className="title">Bank Branch Queue Simulation</div>
+        <div className="dropdown">
+          <button className="dropbtn">DBS Century Square</button>
+          <div className="dropdown-content">
+            <a href="#">DBS Century Square</a>
+            <a href="#">DBS Plaza Singapura</a>
+          </div>
+        </div>
+      </div>
+
+      {/* End of Header */}
+      
       {/* Start of Sidebar */}
       <div className='sidebar'>
         {/* Start of Simulation Settings */}
-        <h3 className='simulation-settings'>Simulation Settings</h3>
+        <h1 className='simulation-settings'>Simulation Settings</h1>
 
-        <div className='simulation-settings-item'>
+        <div className='simulation-settings-item speed-input'>
           <label htmlFor='simulationSpeed'>Simulation Speed</label>
           <input
             id="speedMultiplier"
             type="number"
             value={speedMultiplier}
-            onChange={(e) => setSpeedMultiplier(Number(e.target.value))}
+            onChange={(e) => setSpeedMultiplier(parseInt(e.target.value))}
             min="1"
-            max="100"
+            max="100000"
             disabled={startSimulation}
           />
-          <span>{speedMultiplier}x</span>
         </div>
 
-        <div className='simulation-settings-item'>
-          <input
-            id='customRateEnabled'
-            type='checkbox'
-            checked={isCustomRateEnabled}
-            onChange={(e) => setIsCustomRateEnabled(e.target.checked)}
-            disabled={startSimulation}
-          />
-          <label htmlFor='customRateEnabled'>Set Custom Arrival Rate:</label>
+        <div className="customer-demographic-section">
+          <h3>Customer Demographic Distribution</h3>
+          <div className='simulation-settings-item'>
+            <label htmlFor='localElderlyProbability'>Probability of Local Elderly</label>
+            <input
+              id="localElderlyProbability"
+              value={demographicArrivalProb[Demographic.LOCAL_ELDERLY]}
+              onChange={(e) => handleDemographicArrivalProbChange(Demographic.LOCAL_ELDERLY, parseFloat(e.target.value))}
+              type="number"
+              disabled={startSimulation}
+            />
+          </div>
+
+          <div className='simulation-settings-item'>
+            <label htmlFor='localAdultProbability'>Probability of Local Young Adult</label>
+            <input
+              id="localAdultProbability"
+              value={demographicArrivalProb[Demographic.LOCAL_ADULT]}
+              onChange={(e) => handleDemographicArrivalProbChange(Demographic.LOCAL_ADULT, parseFloat(e.target.value))}
+              type="number"
+              disabled={startSimulation}
+            />
+          </div>
+
+          <div className='simulation-settings-item'>
+            <label htmlFor='foreignerProbability'>Probability of Foreigner</label>
+            <input
+              id="foreignerProbability"
+              value={demographicArrivalProb[Demographic.FOREIGNER]}
+              onChange={(e) => handleDemographicArrivalProbChange(Demographic.FOREIGNER, parseFloat(e.target.value))}
+              type="number"
+              disabled={startSimulation}
+            />
+          </div>
+          {!isValidProbSum ? (
+              <p style={{ color: 'red' }}>Error: Total probability must sum to 1.</p>
+            ) : null}
+        </div>
+        
+        <div className="simulation-settings-item">
+          <br />
+          <label htmlFor="customRateEnabled">
+            <input
+              id="customRateEnabled"
+              type="checkbox"
+              checked={isCustomRateEnabled}
+              onChange={(e) => setIsCustomRateEnabled(e.target.checked)}
+              disabled={startSimulation}
+            />
+            Custom Arrival Rate
+          </label>
 
           <input
-            type='range'
-            min='0.00001'
-            max='1'
-            step='0.01'
+            type="range"
+            min="0.00001"
+            max="1"
+            step="0.01"
             value={arrivalRate}
             onChange={(e) => setArrivalRate(parseFloat(e.target.value))}
+            disabled={!isCustomRateEnabled}
           />
           <br />
           <span>Rate: {arrivalRate}</span>
         </div>
 
-        <div className='simulation-settings-item'>
-          <label htmlFor='customRateEnabled'>Prob for Local Elderly:</label>
-          <input
-            value={demographicArrivalProb[Demographic.LOCAL_ELDERLY]}
-            onChange={(e) => handleDemographicArrivalProbChange(Demographic.LOCAL_ELDERLY, parseFloat(e.target.value))}
-            disabled={startSimulation}
-          />
-          <br />
-
-          <label htmlFor='customRateEnabled'>Prob for Local Adult:</label>
-          <input
-            value={demographicArrivalProb[Demographic.LOCAL_ADULT]}
-            onChange={(e) => handleDemographicArrivalProbChange(Demographic.LOCAL_ADULT, parseFloat(e.target.value))}
-            disabled={startSimulation}
-          />
-          <br />
-
-          <label htmlFor='customRateEnabled'>Prob for Foreigner:</label>
-          <input
-            value={demographicArrivalProb[Demographic.FOREIGNER]}
-            onChange={(e) => handleDemographicArrivalProbChange(Demographic.FOREIGNER, parseFloat(e.target.value))}
-            disabled={startSimulation}
-          />
-
-          {!isValidProbSum && (
-            <p style={{ color: 'red' }}>Error: Total probability must sum to 1.</p>
-          )}
-        </div>
         {/* End of Simulation Settings */}
 
         {/* Solutions to Simulate */}
         <div className='simulation-settings-item'>
-          <h3>Solutions to Simulate</h3>
+          <h3 className='simulation-settings-title'>Solutions for Simulation</h3>
+
           <form>
             <label>
               <input
                 type="radio"
-                value="All"
+                value="All Solutions Combined"
                 checked={solutionChoice === SolutionChoice.ALL}
                 onChange={() => setSolutionChoice(SolutionChoice.ALL)}
                 disabled={startSimulation}
               />
-              All
+              All Solutions Combined
             </label>
             <br />
             <label>
               <input
                 type="radio"
-                value="SharedDatabase"
+                value="Central Knowledge Repository"
                 checked={solutionChoice === SolutionChoice.SHARED_DATABASE}
                 onChange={() => setSolutionChoice(SolutionChoice.SHARED_DATABASE)}
                 disabled={startSimulation}
               />
-              Shared Database
+              Central Knowledge Repository
             </label>
             <br />
             <label>
               <input
                 type="radio"
-                value="EducationForStaff"
+                value="Education for Staff"
                 checked={solutionChoice === SolutionChoice.STAFF_EDUCATION}
                 onChange={() => setSolutionChoice(SolutionChoice.STAFF_EDUCATION)}
                 disabled={startSimulation}
@@ -274,45 +306,53 @@ const Main = (): ReactElement => {
             <label>
               <input
                 type="radio"
-                value="RemovalOf2ndVTMVerification"
+                value="Simplified VTM Process"
                 checked={solutionChoice === SolutionChoice.VTM_VERIFICATION_REMOVAL}
                 onChange={() => setSolutionChoice(SolutionChoice.VTM_VERIFICATION_REMOVAL)}
                 disabled={startSimulation}
               />
-              Removal of 2nd VTM Verification
+              Simplified VTM Process
             </label>
             <br />
             <label>
               <input
                 type="radio"
-                value="MethodsForErrorPrevention"
+                value="Digital Document Checklist"
                 checked={solutionChoice === SolutionChoice.ERROR_PREVENTION}
                 onChange={() => setSolutionChoice(SolutionChoice.ERROR_PREVENTION)}
                 disabled={startSimulation}
               />
-              Methods for Error Prevention
+              Digital Document Checklist
             </label>
           </form>
         </div>
         {/* End of Solutions to Simulate */}
 
         {/* Start of Start Simulation Button */}
-        <div>
-          <button
-            onClick={toggleSimulation}
-            className={startSimulation ? 'stop-simulation' : 'start-simulation'}
-            disabled={!isValidProbSum}
-          >
-            {startSimulation ? 'Stop Simulation' : 'Start Simulation'}
-          </button>
-        </div>
-        <div style={{ marginTop: '5px' }}>
+        <div style={{ display: 'flex', gap: '10px' }}>
+        <button
+          onClick={toggleSimulation}
+          className={startSimulation ? 'stop-simulation' : 'start-simulation'}
+          disabled={!isValidProbSum}
+          style={{
+            flex: 1,
+            minWidth: 0,
+            backgroundColor: startSimulation ? '#FF3333' : '#1a1a1a',
+            color: '#FFFFFF'
+          }}
+        >
+          {startSimulation ? 'Stop Simulation' : 'Start Simulation'}
+        </button>
+
           <button
             onClick={downloadAndRestartSimulation}
+            style={{ flex: 1, minWidth: 0 }}
           >
-            {'Restart Simulation'}
+            {'Reset Simulation'}
           </button>
         </div>
+
+
         {/* End of Start Simulation Button */}
       </div>
       {/* End of Sidebar */}

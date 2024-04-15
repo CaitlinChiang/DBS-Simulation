@@ -1,5 +1,75 @@
+/*Nav Bar*/
+/* Add a black background color to the top navigation */
+.topnav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: white;
+  color: black;
+  padding: 5px 10px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 3;
+  height: 80px;
+  font-size: 14px;
+}
+
+.title {
+  color: black;
+  font-size: 28px;
+  margin-left: 100px; 
+}
+
+.logo img {
+  margin-top: 20px;
+}
+
+.dropbtn {
+  background-color: white;
+  color: black;
+  margin-right: 50px;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+.dropdown-content a {
+  color: white;
+  padding: 8px 12px; 
+  text-decoration: none;
+  display: block;
+  font-size: 16px; 
+}
+
+.dropdown-content a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+.dropdown-content a:hover {
+  background-color: #ddd;
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+/* SIDEBAR */
 .sidebar {
-  width: 200px;
+  width: 300px;
   padding: 0px 20px;
   position: fixed;
   top: 0;
@@ -15,20 +85,100 @@
 }
 
 .simulation-settings {
-  margin: 50px 0;
+  margin-top: 100px; 
+  margin-bottom: 30px;
+  font-size: 28px;
+  text-align: left;
+}
+
+.customer-demographic-section h3 {
+  text-align: left;
+  font-size: 16px;
+}
+
+.customer-demographic-section .simulation-settings-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.customer-demographic-section .simulation-settings-item label {
+  margin-right: 10px; 
+  font-size: 13px; 
+  width: 250px;
+}
+
+.customer-demographic-section .simulation-settings-item input {
+  display: inline-block !important;
+  width: 50px !important; 
+}
+
+.simulation-settings-item h3 {
+  text-align: left;
+  font-size: 16px;
 }
 
 .simulation-settings-item {
   margin-bottom: 50px;
+  font-size: 13px;
+  align-items: center;
 }
 
+.simulation-settings-item label {
+  display: block;
+  text-align: left;
+  font-size: 13px;
+  margin-right: 10px;
+}
+
+.simulation-settings-item input[type="checkbox"] {
+  margin-right: 5px;
+}
+
+.simulation-settings-item label[for='simulationSpeed'] {
+  font-size: 20px;
+}
+
+.simulation-settings-item input {
+  width: 50px;
+}
+
+.simulation-settings-title {
+  margin-bottom: 10px; 
+}
+
+
+.simulation-settings-item label[for="customRateEnabled"] {
+  text-align: center;
+}
+
+.simulation-settings-item input[type="range"] {
+  width: 200px;
+}
+
+
+.simulation-settings-item.speed-input {
+  display: flex;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.simulation-settings-item.speed-input label {
+  margin-right: 10px;
+}
+
+.simulation-settings-item.speed-input input {
+  flex: 1;
+}
+
+
 .content {
-  margin-left: 250px;
+  margin-left: 300px;
   min-height: 95vh;
 }
 
 .simulationInformation {
-  margin-left: 250px;
+  margin-left: 300px;
 }
 
 .dividerSpace {
@@ -63,4 +213,49 @@
 
 .no-bullets {
   list-style-type: none;
+}
+
+.circle-option {
+  position: relative;
+  padding-left: 35px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.circle-option input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  left: 0;
+  top: 0;
+}
+
+.checkmark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 60px !important;  
+  width: 60px !important; 
+  background-color: #eee;
+  border-radius: 50%;
+}
+
+.checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+.circle-option input:checked ~ .checkmark:after {
+  display: block;
+}
+
+.checkmark:after {
+  top: 8px; 
+  left: 8px; 
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: #333;
 }
