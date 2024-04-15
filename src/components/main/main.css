@@ -60,6 +60,14 @@
   margin-right: 10px;
 }
 
+.simulation-settings-item input[type="checkbox"] {
+  margin-right: 5px;
+}
+
+.simulation-settings-item label[for='simulationSpeed'] {
+  font-size: 20px;
+}
+
 .simulation-settings-item input {
   width: 50px;
 }
@@ -72,6 +80,25 @@
 .simulation-settings-item label[for="customRateEnabled"] {
   text-align: center;
 }
+
+.simulation-settings-item input[type="range"] {
+  width: 200px;
+}
+
+
+.simulation-settings-item.speed-input {
+  display: flex;
+  align-items: center;
+}
+
+.simulation-settings-item.speed-input label {
+  margin-right: 10px;
+}
+
+.simulation-settings-item.speed-input input {
+  flex: 1;
+}
+
 
 .content {
   margin-left: 250px;

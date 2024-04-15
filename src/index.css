@@ -1,5 +1,7 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans&display=swap');
+
 :root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: 'Open Sans', sans-serif; /* Change the font-family to Open Sans */
   line-height: 1.5;
   font-weight: 400;
 
@@ -33,6 +35,12 @@ body {
 h1 {
   font-size: 3.2em;
   line-height: 1.1;
+  font-weight: bold;
+}
+
+h2, h3 {
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 700; 
 }
 
 button {

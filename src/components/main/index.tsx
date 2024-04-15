@@ -168,13 +168,13 @@ const Main = (): ReactElement => {
         {/* Start of Simulation Settings */}
         <h1 className='simulation-settings'>Simulation Settings</h1>
 
-        <div className='simulation-settings-item'>
+        <div className='simulation-settings-item speed-input'>
           <label htmlFor='simulationSpeed'>Simulation Speed</label>
           <input
             id="speedMultiplier"
             type="number"
             value={speedMultiplier}
-            onChange={(e) => setSpeedMultiplier(Number(e.target.value))}
+            onChange={(e) => setSpeedMultiplier(parseInt(e.target.value))}
             min="1"
             max="100"
             disabled={startSimulation}
@@ -217,27 +217,34 @@ const Main = (): ReactElement => {
           )}
         </div>
         
-        <div className='simulation-settings-item'>
-          <input
-            id='customRateEnabled'
-            type='checkbox'
-            checked={isCustomRateEnabled}
-            onChange={(e) => setIsCustomRateEnabled(e.target.checked)}
-            disabled={startSimulation}
-          />
-          <label htmlFor='customRateEnabled'>Customer Arrival Rate</label>
+        <div className="simulation-settings-item">
+          <br />
+          <label htmlFor="customRateEnabled">
+            <input
+              id="customRateEnabled"
+              type="checkbox"
+              checked={isCustomRateEnabled}
+              onChange={(e) => setIsCustomRateEnabled(e.target.checked)}
+              disabled={startSimulation}
+            />
+            Custom Arrival Rate
+          </label>
 
           <input
-            type='range'
-            min='0.00001'
-            max='1'
-            step='0.01'
+            type="range"
+            min="0.00001"
+            max="1"
+            step="0.01"
             value={arrivalRate}
             onChange={(e) => setArrivalRate(parseFloat(e.target.value))}
+            disabled={!isCustomRateEnabled}
           />
           <br />
           <span>Rate: {arrivalRate}</span>
         </div>
+
+
+
         {/* End of Simulation Settings */}
 
         {/* Solutions to Simulate */}
@@ -305,19 +312,20 @@ const Main = (): ReactElement => {
 
         {/* Start of Start Simulation Button */}
         <div style={{ display: 'flex', gap: '10px' }}>
-          <button
-            onClick={toggleSimulation}
-            className={startSimulation ? 'stop-simulation' : 'start-simulation'}
-            disabled={!isValidProbSum}
-            style={{
-              flex: 1,
-              minWidth: 0,
-              backgroundColor: startSimulation ? '#1a1a1a' : '#FF3333',
-              color: '#FFFFFF' // Always white
-            }}
-          >
-            {startSimulation ? 'Start Simulation' : 'Stop Simulation'}
-          </button>
+        <button
+          onClick={toggleSimulation}
+          className={startSimulation ? 'stop-simulation' : 'start-simulation'}
+          disabled={!isValidProbSum}
+          style={{
+            flex: 1,
+            minWidth: 0,
+            backgroundColor: startSimulation ? '#FF3333' : '#1a1a1a',
+            color: '#FFFFFF'
+          }}
+        >
+          {startSimulation ? 'Stop Simulation' : 'Start Simulation'}
+        </button>
+
           <button
             onClick={downloadAndRestartSimulation}
             style={{ flex: 1, minWidth: 0 }}
