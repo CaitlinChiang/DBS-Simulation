@@ -160,9 +160,26 @@ const Main = (): ReactElement => {
       [demographic]: newValue
     })
   }
-
+  
   return (
     <div className='Main'>
+      {/* Start of Header */}
+      <div className="topnav">
+        <div className="logo">
+          <img src="/images/logo-name.jpg" alt="Your Logo" style={{ width: "110px", height: "55px" }} />
+        </div>
+        <div className="title">Bank Branch Queue Simulation</div>
+        <div className="dropdown">
+          <button className="dropbtn">DBS Century Square</button>
+          <div className="dropdown-content">
+            <a href="#">DBS Century Square</a>
+            <a href="#">DBS Plaza Singapura</a>
+          </div>
+        </div>
+      </div>
+
+      {/* End of Header */}
+      
       {/* Start of Sidebar */}
       <div className='sidebar'>
         {/* Start of Simulation Settings */}
@@ -176,7 +193,7 @@ const Main = (): ReactElement => {
             value={speedMultiplier}
             onChange={(e) => setSpeedMultiplier(parseInt(e.target.value))}
             min="1"
-            max="100"
+            max="100000"
             disabled={startSimulation}
           />
         </div>
@@ -189,6 +206,7 @@ const Main = (): ReactElement => {
               id="localElderlyProbability"
               value={demographicArrivalProb[Demographic.LOCAL_ELDERLY]}
               onChange={(e) => handleDemographicArrivalProbChange(Demographic.LOCAL_ELDERLY, parseFloat(e.target.value))}
+              type="number"
               disabled={startSimulation}
             />
           </div>
@@ -199,6 +217,7 @@ const Main = (): ReactElement => {
               id="localAdultProbability"
               value={demographicArrivalProb[Demographic.LOCAL_ADULT]}
               onChange={(e) => handleDemographicArrivalProbChange(Demographic.LOCAL_ADULT, parseFloat(e.target.value))}
+              type="number"
               disabled={startSimulation}
             />
           </div>
@@ -209,12 +228,13 @@ const Main = (): ReactElement => {
               id="foreignerProbability"
               value={demographicArrivalProb[Demographic.FOREIGNER]}
               onChange={(e) => handleDemographicArrivalProbChange(Demographic.FOREIGNER, parseFloat(e.target.value))}
+              type="number"
               disabled={startSimulation}
             />
           </div>
-          {!isValidProbSum && (
-            <p style={{ color: 'red' }}>Error: Total probability must sum to 1.</p>
-          )}
+          {!isValidProbSum ? (
+              <p style={{ color: 'red' }}>Error: Total probability must sum to 1.</p>
+            ) : null}
         </div>
         
         <div className="simulation-settings-item">
@@ -242,8 +262,6 @@ const Main = (): ReactElement => {
           <br />
           <span>Rate: {arrivalRate}</span>
         </div>
-
-
 
         {/* End of Simulation Settings */}
 

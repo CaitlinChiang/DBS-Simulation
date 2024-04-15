@@ -1,3 +1,73 @@
+/*Nav Bar*/
+/* Add a black background color to the top navigation */
+.topnav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: white;
+  color: black;
+  padding: 5px 10px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 3;
+  height: 80px;
+  font-size: 14px;
+}
+
+.title {
+  color: black;
+  font-size: 28px;
+  margin-left: 100px; 
+}
+
+.logo img {
+  margin-top: 20px;
+}
+
+.dropbtn {
+  background-color: white;
+  color: black;
+  margin-right: 50px;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+.dropdown-content a {
+  color: white;
+  padding: 8px 12px; 
+  text-decoration: none;
+  display: block;
+  font-size: 16px; 
+}
+
+.dropdown-content a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+.dropdown-content a:hover {
+  background-color: #ddd;
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+/* SIDEBAR */
 .sidebar {
   width: 300px;
   padding: 0px 20px;
@@ -15,7 +85,8 @@
 }
 
 .simulation-settings {
-  margin: 30px 0;
+  margin-top: 100px; 
+  margin-bottom: 30px;
   font-size: 28px;
   text-align: left;
 }
@@ -89,6 +160,7 @@
 .simulation-settings-item.speed-input {
   display: flex;
   align-items: center;
+  margin-bottom: 30px;
 }
 
 .simulation-settings-item.speed-input label {
@@ -101,12 +173,12 @@
 
 
 .content {
-  margin-left: 250px;
+  margin-left: 300px;
   min-height: 95vh;
 }
 
 .simulationInformation {
-  margin-left: 250px;
+  margin-left: 300px;
 }
 
 .dividerSpace {
